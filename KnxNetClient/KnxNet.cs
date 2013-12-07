@@ -382,14 +382,14 @@ namespace Knx
             }
             else
             {   // Kein Controlltelegramm
-                int idx = 0x0D;
+                int idx = 0x0A;
                 int len = receiveBytes.Length - idx;
 
                 byte[] t = new byte[len];
                 Array.Copy(receiveBytes,idx,t,0,len);
 
-                EIB_Telegramm tele = new EIB_Telegramm(t);
-                Log(tele.ToString());
+                cEMI emi = cEMI.ByteArrayToStruct(t);
+                Log(emi.ToString());
 
                 lock (fromKnxQueue)
                 {

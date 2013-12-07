@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Runtime.InteropServices;
 
 namespace Knx
 {
@@ -14,6 +15,7 @@ namespace Knx
             for (int i = 0; i < receiveBytes.Length; i++) erg = erg + receiveBytes[i].ToString("X2") + " ";
             return erg;
         }
+
 
     }
 }

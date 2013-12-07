@@ -23,6 +23,8 @@ namespace Knx
             timer1.Start();
             //tb_Log = tBResponse;
             KnxCon.SetLog(AddLogText);
+
+
         }
 
  
@@ -38,6 +40,21 @@ namespace Knx
 
         private void Open_Click(object sender, EventArgs e)
         {
+
+            ////Test
+            //cEMI emi = new cEMI();
+
+            //byte[] arr = new byte[5]; 
+            //arr[0] = 5;
+            //arr[1] = 10;
+            //arr[2] = 20;
+            //arr[3] = 30;
+            //arr[4] = 40;
+
+
+            //emi = cEMI.ByteArrayToStruct(arr);
+
+
             byte [] stream = KnxCon.Open("192.168.0.3");
         }
 
@@ -81,7 +98,7 @@ namespace Knx
                 }
                 else
                 {   // Tunneltelegramm
-                    tBResponse.AppendText( Environment.NewLine + "<D:" + KnxTools.BytesToString(tele));
+                    //tBResponse.AppendText( Environment.NewLine + "<D:" + KnxTools.BytesToString(tele));
                 }
 
                 tele = KnxCon.GetData();
