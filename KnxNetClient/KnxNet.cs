@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Collections;
 using System.Timers;
+using EIBDef;
 
 namespace Knx
 {
@@ -381,6 +382,15 @@ namespace Knx
             }
             else
             {   // Kein Controlltelegramm
+                int idx = 0x0D;
+                int len = receiveBytes.Length - idx;
+
+                byte[] t = new byte[len];
+                Array.Copy(receiveBytes,idx,t,0,len);
+
+                EIB_Telegramm tele = new EIB_Telegramm(t);
+                Log(tele.ToString());
+
                 lock (fromKnxQueue)
                 {
                     fromKnxQueue.Enqueue(receiveBytes);
