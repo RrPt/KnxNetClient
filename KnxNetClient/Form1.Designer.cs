@@ -50,7 +50,7 @@
             // button2
             // 
             this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button2.Location = new System.Drawing.Point(438, 22);
+            this.button2.Location = new System.Drawing.Point(636, 22);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 23);
             this.button2.TabIndex = 1;
@@ -67,7 +67,7 @@
             this.tBResponse.Multiline = true;
             this.tBResponse.Name = "tBResponse";
             this.tBResponse.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.tBResponse.Size = new System.Drawing.Size(490, 285);
+            this.tBResponse.Size = new System.Drawing.Size(688, 285);
             this.tBResponse.TabIndex = 2;
             // 
             // button3
@@ -99,7 +99,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(539, 369);
+            this.ClientSize = new System.Drawing.Size(737, 369);
             this.Controls.Add(this.btn_Heartbeat);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.tBResponse);

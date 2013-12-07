@@ -13,21 +13,24 @@ namespace Knx
     public partial class KnxNetForm : Form
     {
         KnxNetConnection KnxCon = new KnxNetConnection();
-        static public System.Windows.Forms.TextBox tb_Log;
+        //static public System.Windows.Forms.TextBox tb_Log;
+        delegate void StringParameterWithStatusDelegate(string Text);
+
 
         public KnxNetForm()
         {
             InitializeComponent();
             timer1.Start();
-            tb_Log = tBResponse;
+            //tb_Log = tBResponse;
+            KnxCon.SetLog(AddLogText);
         }
 
  
         private void GetData()
         {
             byte[] tele = KnxCon.GetData();
-            if (tele != null) tBResponse.Text = tBResponse.Text + Environment.NewLine + KnxTools.BytesToString(tele);
-            else tBResponse.Text = tBResponse.Text + Environment.NewLine + "no Telegramm";
+            if (tele != null) tBResponse.AppendText(Environment.NewLine + KnxTools.BytesToString(tele));
+            else tBResponse.AppendText(Environment.NewLine + "no Telegramm");
         }
 
 
@@ -54,7 +57,19 @@ namespace Knx
             KnxCon.Heartbeat();
         }
 
- 
+
+        public void AddLogText(String Text)
+        {
+            if (InvokeRequired)
+            {
+                BeginInvoke(new StringParameterWithStatusDelegate(AddLogText), new object[] { Text });
+            }
+            else
+            {
+                tBResponse.AppendText(Environment.NewLine + "---  " + Text);
+            }
+        }
+
         private void timer1_Tick(object sender, EventArgs e)
         {
             byte[] tele = KnxCon.GetData();
@@ -62,11 +77,11 @@ namespace Knx
             {
                 if (tele[2] == 0x02)
                 {   // Controltelegramm
-                    tBResponse.Text = tBResponse.Text + Environment.NewLine + "<C:" + KnxTools.BytesToString(tele);
+                    tBResponse.AppendText(Environment.NewLine + "<C:" + KnxTools.BytesToString(tele));
                 }
                 else
                 {   // Tunneltelegramm
-                    tBResponse.Text = tBResponse.Text + Environment.NewLine + "<D:" + KnxTools.BytesToString(tele);
+                    tBResponse.AppendText( Environment.NewLine + "<D:" + KnxTools.BytesToString(tele));
                 }
 
                 tele = KnxCon.GetData();

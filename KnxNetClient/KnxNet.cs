@@ -4,6 +4,7 @@ using System.Text;
 using System.Net;
 using System.Net.Sockets;
 using System.Collections;
+using System.Timers;
 
 namespace Knx
 {
@@ -232,12 +233,22 @@ namespace Knx
         int AnzTelegramme = 0;
         Queue<byte[]> fromKnxQueue = new Queue<byte[]>();
         public byte channelId = 0;
+        private static Timer timerHeartbeat;
+        public delegate void LoggingDelegate(string Text);
+        LoggingDelegate Log = null;
 
         public KnxNetConnection()
         {
             IPHostEntry Host = Dns.GetHostEntry(Dns.GetHostName());
             myIP = Host.AddressList[1];
             udpClient = new UdpClient(clientPort);
+            timerHeartbeat = new System.Timers.Timer(60000);
+            timerHeartbeat.Elapsed += new ElapsedEventHandler(OnTimedEventHeartbeat);
+        }
+
+        public void SetLog(LoggingDelegate LogFunction)
+        {
+            Log = LogFunction; 
         }
 
         /// <summary>
@@ -258,11 +269,11 @@ namespace Knx
                 Tele.Connect();
                 byte[] TeleBytes = Tele.bytes;
 
-                KnxNetForm.tb_Log.Text = KnxNetForm.tb_Log.Text + Environment.NewLine + "O>:" + KnxTools.BytesToString(TeleBytes);
+                //KnxNetForm.tb_Log.AppendText(Environment.NewLine + "O>:" + KnxTools.BytesToString(TeleBytes));
+                Log("O>:" + KnxTools.BytesToString(TeleBytes));
 
                 udpClient.Send(TeleBytes,TeleBytes.Length);
 
-                //IPEndPoint RemoteIpEndPoint = new IPEndPoint(IPAddress.Any, clientPort);
            }
             catch (Exception e)
             {
@@ -271,6 +282,9 @@ namespace Knx
 
             // nun den Listener starten
             ar = udpClient.BeginReceive(new AsyncCallback(ReceiveCallback), AnzTelegramme);
+
+            // Den Heartbeat Timer starten
+            timerHeartbeat.Start();
 
             return receiveBytes;
         }
@@ -288,12 +302,15 @@ namespace Knx
                 Tele.Disconnect();
                 byte[] TeleBytes = Tele.bytes;
 
-                KnxNetForm.tb_Log.Text = KnxNetForm.tb_Log.Text + Environment.NewLine + "C>:" + KnxTools.BytesToString(TeleBytes);
+                //KnxNetForm.tb_Log.AppendText(Environment.NewLine + "C>:" + KnxTools.BytesToString(TeleBytes));
+                Log("C>:" + KnxTools.BytesToString(TeleBytes));
 
                 udpClient.Send(TeleBytes, TeleBytes.Length);
 
-                IPEndPoint RemoteIpEndPoint = new IPEndPoint(IPAddress.Any, 0);
+                //IPEndPoint RemoteIpEndPoint = new IPEndPoint(IPAddress.Any, 0);
 
+                // Den Heartbeat Timer stoppen
+                timerHeartbeat.Stop();
 
                 int Anz = (int)ar.AsyncState;
                 IPEndPoint e = new IPEndPoint(IPAddress.Any, 0);
@@ -321,18 +338,10 @@ namespace Knx
                 Tele.Heartbeat();
                 byte[] TeleBytes = Tele.bytes;
 
-                KnxNetForm.tb_Log.Text = KnxNetForm.tb_Log.Text + Environment.NewLine + "C>:" + KnxTools.BytesToString(TeleBytes);
+               // KnxNetForm
+               Log("H>:" + KnxTools.BytesToString(TeleBytes));
 
                 udpClient.Send(TeleBytes, TeleBytes.Length);
-
-                //IPEndPoint RemoteIpEndPoint = new IPEndPoint(IPAddress.Any, 0);
-
-
-                //int Anz = (int)ar.AsyncState;
-                //IPEndPoint e = new IPEndPoint(IPAddress.Any, 0);
-                //udpClient.EndReceive(ar, ref e);
-
-                //udpClient.Close();
             }
             catch (Exception e)
             {
@@ -368,13 +377,7 @@ namespace Knx
                     default: break;
                 }
 
-                // nur für debugging
-                lock (fromKnxQueue)
-                {
-                    fromKnxQueue.Enqueue(receiveBytes);
-                }
-
-
+                Log("<c:" + KnxTools.BytesToString(receiveBytes));
             }
             else
             {   // Kein Controlltelegramm
@@ -386,7 +389,10 @@ namespace Knx
             ar = udpClient.BeginReceive(new AsyncCallback(ReceiveCallback), Anz);
         }
 
-
+        private void OnTimedEventHeartbeat(object source, ElapsedEventArgs e)
+        {
+            Heartbeat();
+        }
 
         internal Byte[] GetData()
         {
