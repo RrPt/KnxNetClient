@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Net.Sockets;
 using System.Net;
+using EIBDef;
 
 namespace Knx
 {
@@ -103,6 +104,28 @@ namespace Knx
 
                 tele = KnxCon.GetData();
             }
+        }
+
+        private void bt_Send_Click(object sender, EventArgs e)
+        {
+            cEMI emi = new cEMI();
+            emi.m_APCI = APCI_Typ.Send;
+            emi.Eis1 = false;
+            emi.m_source = new EIB_Adress(0);
+            emi.m_destination = new EIB_Adress(2);
+            emi.m_DataLen = 1;
+            KnxCon.Send(emi);
+        }
+
+        private void btn_Send0_Click(object sender, EventArgs e)
+        {
+            cEMI emi = new cEMI();
+            emi.m_APCI = APCI_Typ.Send;
+            emi.Eis1 = true;
+            emi.m_source = new EIB_Adress(0);
+            emi.m_destination = new EIB_Adress(2);
+            emi.m_DataLen = 1;
+            KnxCon.Send(emi);
         }
 
     }

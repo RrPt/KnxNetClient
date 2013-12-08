@@ -47,20 +47,24 @@ namespace Knx
         public byte byte4;
         public byte byte5;
 
-        private EIB_Adress m_source;                    // physik. Absenderaddr
-        private EIB_Adress m_destination;               // Zieladr
-        private byte[] m_value;                        // Inhalt des Telegramme (uninterpretiert)
-        private DateTime m_ReceiveTime;                // Zeit des anlegens
-        private int m_DataLen;                          // Datenlänge
-        private APCI_Typ m_APCI;                        // APCI-Typ
+        public EIB_Adress m_source;                    // physik. Absenderaddr
+        public EIB_Adress m_destination;               // Zieladr
+        public byte[] m_value;                        // Inhalt des Telegramme (uninterpretiert)
+        public DateTime m_ReceiveTime;                // Zeit des anlegens
+        public int m_DataLen;                          // Datenlänge
+        public APCI_Typ m_APCI;                        // APCI-Typ
 
+        public cEMI()
+        {
+            m_value = new byte[15];
+        }
 
         /// <summary>
         /// Kopiert Daten aus einem Byte-Array in eine cEMI Strukture (struct). Die Struktur muss ein sequenzeilles Layout besitzen. ( [StructLayout(LayoutKind.Sequential)] 
         /// </summary>
         /// <param name="array">Das Byte-Array das die daten enthält</param>
         /// <returns>cEMI object</returns>
-        public static cEMI ByteArrayToStruct(byte[] array)
+        public static cEMI ByteToData(byte[] array)
         {
 
             //if (structType.StructLayoutAttribute.Value != LayoutKind.Sequential)
@@ -102,6 +106,34 @@ namespace Knx
 
 
             return emi;
+        }
+
+
+        public byte[] DataToByte()
+        {
+
+            //if (structType.StructLayoutAttribute.Value != LayoutKind.Sequential)
+            //    throw new ArgumentException("structType ist keine Struktur oder nicht Sequentiell.");
+
+            int size = m_DataLen+10;
+
+            byte[] tmp = new byte[size];
+            tmp[0] = 0x11;
+            tmp[1] = 0x00;
+            tmp[2] = 0xBC;
+            tmp[3] = 0xE0;
+            tmp[4] = m_source.MSB;
+            tmp[5] = m_source.LSB;
+            tmp[6] = m_destination.MSB;
+            tmp[7] = m_destination.LSB;
+            tmp[8] = (byte)m_DataLen;
+            tmp[9] = 0x00;
+            if (m_DataLen == 1)
+            {
+            tmp[10] = (byte)(0x80 | m_value[0]);
+            }
+            // xxx für andere Datenlängen ergänzen
+            return tmp;
         }
 
         // Ausgabe als String
@@ -149,6 +181,14 @@ namespace Knx
                     return false;
                 }
                 return m_value[0] == 1;
+            }
+            //Set Fehlt
+            set
+            {
+                if (value)
+                    m_value[0] = (byte)( m_value[0] | ((byte)0x01));
+                else
+                    m_value[0] = (byte)( m_value[0] & (byte)0xf0);
             }
         }
 

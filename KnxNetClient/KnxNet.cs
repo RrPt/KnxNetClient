@@ -218,6 +218,23 @@ namespace Knx
         }
 
 
+        internal void Data(cEMI emi,byte SeqCounter)
+        {
+            List<byte> l = new List<byte>();
+
+            KnxIpHeader header = new KnxIpHeader(knxnetip_services.TUNNELLING_REQUEST);
+
+            header.Length = (short)(header.bytes.Length + emi.m_DataLen + 14);
+            l.AddRange(header.bytes);
+            l.Add(0x04);
+            l.Add(con.channelId);
+            l.Add(SeqCounter);
+            l.Add(0x00);
+            l.AddRange(emi.DataToByte());
+
+            _bytes = l.ToArray();
+        }
+
     }
 
 
@@ -237,6 +254,7 @@ namespace Knx
         private static Timer timerHeartbeat;
         public delegate void LoggingDelegate(string Text);
         LoggingDelegate Log = null;
+        byte SeqCounter = 0;
 
         public KnxNetConnection()
         {
@@ -352,6 +370,32 @@ namespace Knx
         }
 
 
+        /// <summary>
+        /// Daten auf den Bus senden
+        /// </summary>
+        internal byte[] Send(cEMI emi)
+        {
+            Byte[] receiveBytes = null;
+            try
+            {
+                KnxIpTelegramm Tele = new KnxIpTelegramm(this);
+                Tele.Data(emi,SeqCounter++);
+                byte[] TeleBytes = Tele.bytes;
+
+                // KnxNetForm
+                Log("H>:" + KnxTools.BytesToString(TeleBytes));
+
+                udpClient.Send(TeleBytes, TeleBytes.Length);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+            return receiveBytes;
+        }
+
+
+
         public void ReceiveCallback(IAsyncResult ar)
         {
             int Anz = (int)ar.AsyncState;
@@ -380,20 +424,27 @@ namespace Knx
 
                 Log("<c:" + KnxTools.BytesToString(receiveBytes));
             }
-            else
+            else if (receiveBytes[2] == 0x04)
             {   // Kein Controlltelegramm
-                int idx = 0x0A;
-                int len = receiveBytes.Length - idx;
+                if (receiveBytes[3] == 0x20)
+                {   // Datentelegramm
+                    int idx = 0x0A;
+                    int len = receiveBytes.Length - idx;
 
-                byte[] t = new byte[len];
-                Array.Copy(receiveBytes,idx,t,0,len);
+                    byte[] t = new byte[len];
+                    Array.Copy(receiveBytes, idx, t, 0, len);
 
-                cEMI emi = cEMI.ByteArrayToStruct(t);
-                Log(emi.ToString());
+                    cEMI emi = cEMI.ByteToData(t);
+                    Log(emi.ToString());
 
-                lock (fromKnxQueue)
-                {
-                    fromKnxQueue.Enqueue(receiveBytes);
+                    lock (fromKnxQueue)
+                    {
+                        fromKnxQueue.Enqueue(receiveBytes);
+                    }
+                }
+                else if (receiveBytes[3] == 0x21)
+                {   // Bestätigung eines Datentelegramm
+                    Console.WriteLine("Daten bestätigt  status = " + receiveBytes[9]);
                 }
             }
             ar = udpClient.BeginReceive(new AsyncCallback(ReceiveCallback), Anz);

@@ -35,6 +35,8 @@
             this.button3 = new System.Windows.Forms.Button();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.btn_Heartbeat = new System.Windows.Forms.Button();
+            this.bt_Send = new System.Windows.Forms.Button();
+            this.btn_Send0 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // button1
@@ -95,11 +97,33 @@
             this.btn_Heartbeat.UseVisualStyleBackColor = true;
             this.btn_Heartbeat.Click += new System.EventHandler(this.btn_Heartbeat_Click);
             // 
+            // bt_Send
+            // 
+            this.bt_Send.Location = new System.Drawing.Point(355, 22);
+            this.bt_Send.Name = "bt_Send";
+            this.bt_Send.Size = new System.Drawing.Size(75, 23);
+            this.bt_Send.TabIndex = 5;
+            this.bt_Send.Text = "Send Az auf";
+            this.bt_Send.UseVisualStyleBackColor = true;
+            this.bt_Send.Click += new System.EventHandler(this.bt_Send_Click);
+            // 
+            // btn_Send0
+            // 
+            this.btn_Send0.Location = new System.Drawing.Point(447, 22);
+            this.btn_Send0.Name = "btn_Send0";
+            this.btn_Send0.Size = new System.Drawing.Size(75, 23);
+            this.btn_Send0.TabIndex = 6;
+            this.btn_Send0.Text = "Send Az zu";
+            this.btn_Send0.UseVisualStyleBackColor = true;
+            this.btn_Send0.Click += new System.EventHandler(this.btn_Send0_Click);
+            // 
             // KnxNetForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(737, 369);
+            this.Controls.Add(this.btn_Send0);
+            this.Controls.Add(this.bt_Send);
             this.Controls.Add(this.btn_Heartbeat);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.tBResponse);
@@ -120,6 +144,8 @@
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.Button btn_Heartbeat;
+        private System.Windows.Forms.Button bt_Send;
+        private System.Windows.Forms.Button btn_Send0;
     }
 }
 
