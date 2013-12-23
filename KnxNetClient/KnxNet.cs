@@ -224,7 +224,7 @@ namespace Knx
 
             KnxIpHeader header = new KnxIpHeader(knxnetip_services.TUNNELLING_REQUEST);
 
-            header.Length = (short)(header.bytes.Length + emi.m_DataLen + 14);
+            header.Length = (short)(header.bytes.Length + emi.DataLen + 14);
             l.AddRange(header.bytes);
             l.Add(0x04);
             l.Add(con.channelId);
@@ -434,7 +434,7 @@ namespace Knx
                     byte[] t = new byte[len];
                     Array.Copy(receiveBytes, idx, t, 0, len);
 
-                    cEMI emi = cEMI.ByteToData(t);
+                    cEMI emi = new cEMI(t);
                     Log(emi.ToString());
 
                     lock (fromKnxQueue)

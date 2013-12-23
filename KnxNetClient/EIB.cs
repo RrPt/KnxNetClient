@@ -272,42 +272,7 @@ namespace EIBDef
             if (m_DataLen>0) m_value[0] =(byte)( (byte)m_value[0] & (byte)0x3F);
         }
 
-        //// Konstruktor aus empfangenen Rohdaten  alte falsche Version
-        //public EIB_Telegramm(byte[] raw)
-        //{
-        //    m_ReceiveTime = DateTime.Now;
-        //    if (raw.Length < 12) throw new Exception("Rohdaten zu kurz");
-
-        //    int len = raw[2];
-        //    if (len < 0x0A) throw new Exception("Rohdaten enthalten zu kleine Laenge");
-        //    if (len > raw.Length) throw new Exception("Rohdaten enthalten falsche Laengenangabe");
-
-        //    // Quelle eintragen
-        //    m_source = new EIB_Adress((raw[5] << 8) + raw[6], EIB_Adress_Typ.PhysAdr);
-
-        //    // Ziel eintragen
-        //    if ((raw[9] & 0x80) == 0x80)
-        //        m_destination = new EIB_Adress((raw[7] << 8) + raw[8], EIB_Adress_Typ.GroupAdr);
-        //    else
-        //        m_destination = new EIB_Adress((raw[7] << 8) + raw[8], EIB_Adress_Typ.PhysAdr);
-
-        //    // Datenlänge bestimmen
-        //    m_DataLen = raw[9] & 0x0F;
-
-        //    // APCI bestimmen
-        //    m_APCI = (APCI_Typ)((raw[11] >> 6) & 0x03);
-
-        //    // Daten kopieren
-        //    m_value = new byte[m_DataLen];
-        //    for (ushort i = 0; i < m_DataLen; i++)
-        //    {
-        //        m_value[i] = raw[i + 11];
-        //    }
-        //    // APCI-Flag aus den Daten ausblenden
-        //    if (m_DataLen > 0) m_value[0] = (byte)((byte)m_value[0] & (byte)0x3F);
-        //}
-
-
+ 
 
 
         // Konstruktor für EIS1 Telegramm: bool

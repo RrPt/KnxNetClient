@@ -108,23 +108,14 @@ namespace Knx
 
         private void bt_Send_Click(object sender, EventArgs e)
         {
-            cEMI emi = new cEMI();
-            emi.m_APCI = APCI_Typ.Send;
-            emi.Eis1 = false;
-            emi.m_source = new EIB_Adress(0);
-            emi.m_destination = new EIB_Adress(2);
-            emi.m_DataLen = 1;
+            cEMI emi = new cEMI(new EIB_Adress(64), 11.1f);
             KnxCon.Send(emi);
         }
 
         private void btn_Send0_Click(object sender, EventArgs e)
         {
-            cEMI emi = new cEMI();
-            emi.m_APCI = APCI_Typ.Send;
-            emi.Eis1 = true;
-            emi.m_source = new EIB_Adress(0);
-            emi.m_destination = new EIB_Adress(2);
-            emi.m_DataLen = 1;
+            cEMI emi = new cEMI(new EIB_Adress(64), true);
+            emi.APCI = APCI_Typ.Request;
             KnxCon.Send(emi);
         }
 

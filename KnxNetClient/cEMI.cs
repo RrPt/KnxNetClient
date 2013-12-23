@@ -8,112 +8,151 @@ namespace Knx
 {
 
 
-    [StructLayout(LayoutKind.Sequential,Pack=1)]
     class cEMI
-    {
-        //[FieldOffset(0)]
-        public byte msgCode;
+    {   // Definition der Positionen
+        const int msgCode = 0;
+        const int adInfoLen=1;
+        const int Control1 =2;
+        const int control2=3;
+        const int sourceAdrH=4;
+        const int sourceAdrL=5;
+        const int DestAdrH=6;
+        const int DestAdrL=7;
+        const int dataLen=8;
+        const int PosAPDU=9;
+        const int PosAPCI = 10;
 
-        //[FieldOffset(1)]
-        public byte adInfoLen;
+        // Daten
+        EIB_Adress m_source = new EIB_Adress(0);    // physik. Absenderaddr (wird vom Gateway überschrieben)
+        EIB_Adress m_destination = null;            // Zieladr
+        byte[] m_value = null;                      // Inhalt des Telegramme (uninterpretiert)
+        DateTime m_ReceiveTime = DateTime.MinValue; // Zeit des anlegens
+        int m_DataLen=0;                            // Datenlänge
+        APCI_Typ m_APCI = APCI_Typ.unnown;          // APCI-Typ
 
-        //[FieldOffset(2)]
-        public byte Control1;
 
-        //[FieldOffset(3)]
-        public byte control2;
-
-        //[FieldOffset(4)]
-        public byte sourceAdrH;
-
-        //[FieldOffset(5)]
-        public byte sourceAdrL;
-
-        //[FieldOffset(6)]
-        public byte DestAdrH;
-
-        //[FieldOffset(7)]
-        public byte DestAdrL;
-
-        //[FieldOffset(8)]
-        public byte dataLen;
-
-        //[FieldOffset(9)]
-        public short APDU;
-
-        public byte byte1;
-        public byte byte2;
-        public byte byte3;
-        public byte byte4;
-        public byte byte5;
-
-        public EIB_Adress m_source;                    // physik. Absenderaddr
-        public EIB_Adress m_destination;               // Zieladr
-        public byte[] m_value;                        // Inhalt des Telegramme (uninterpretiert)
-        public DateTime m_ReceiveTime;                // Zeit des anlegens
-        public int m_DataLen;                          // Datenlänge
-        public APCI_Typ m_APCI;                        // APCI-Typ
-
+        /// <summary>
+        /// Konstruktor für leeres Telegramm
+        /// </summary>
         public cEMI()
         {
             m_value = new byte[15];
         }
 
+
         /// <summary>
-        /// Kopiert Daten aus einem Byte-Array in eine cEMI Strukture (struct). Die Struktur muss ein sequenzeilles Layout besitzen. ( [StructLayout(LayoutKind.Sequential)] 
+        /// Konstruktor aus Byte Array
         /// </summary>
-        /// <param name="array">Das Byte-Array das die daten enthält</param>
-        /// <returns>cEMI object</returns>
-        public static cEMI ByteToData(byte[] array)
+        /// <param name="array"></param>
+        public cEMI (byte[] array)
         {
+            m_ReceiveTime = DateTime.Now;
 
-            //if (structType.StructLayoutAttribute.Value != LayoutKind.Sequential)
-            //    throw new ArgumentException("structType ist keine Struktur oder nicht Sequentiell.");
-
-            int size = Marshal.SizeOf(typeof(cEMI));
-            //if (array.Length < (size))
-            //    throw new ArgumentException("Byte-Array hat die falsche Länge.");
-
-            byte[] tmp = new byte[size];
-            Array.Copy(array, 0, tmp, 0, array.Length);
-
-            GCHandle structHandle = GCHandle.Alloc(tmp, GCHandleType.Pinned);
-            cEMI emi = (cEMI)Marshal.PtrToStructure(structHandle.AddrOfPinnedObject(), typeof(cEMI));
-            structHandle.Free();
-            emi.m_ReceiveTime = DateTime.Now;
-
-            // Quelle eintragen
-            emi.m_source = new EIB_Adress((emi.sourceAdrH << 8) + emi.sourceAdrL,EIB_Adress_Typ.PhysAdr);
-            // Ziel eintragen
-            if ((emi.control2&0x80 ) == 0x80)
-                emi.m_destination = new EIB_Adress((emi.DestAdrH << 8) + emi.DestAdrL, EIB_Adress_Typ.GroupAdr);
-            else
-                emi.m_destination = new EIB_Adress((emi.DestAdrH << 8) + emi.DestAdrL, EIB_Adress_Typ.PhysAdr);
-
-            emi.m_DataLen = emi.dataLen;
-
-            // APCI bestimmen
-            emi.m_APCI = (APCI_Typ)((array[10] >> 6) & 0x03);
-
-            // Daten kopieren
-            emi.m_value = new byte[emi.m_DataLen];
-            for (ushort i = 0; i < emi.m_DataLen; i++)
+            try
             {
-                emi.m_value[i] = array[i + 10];
+                // Quelle eintragen
+                m_source = new EIB_Adress((array[sourceAdrH] << 8) + array[sourceAdrL], EIB_Adress_Typ.PhysAdr);
+                // Ziel eintragen
+                if ((array[control2] & 0x80) == 0x80)
+                    m_destination = new EIB_Adress((array[DestAdrH] << 8) + array[DestAdrL], EIB_Adress_Typ.GroupAdr);
+                else
+                    m_destination = new EIB_Adress((array[DestAdrH] << 8) + array[DestAdrL], EIB_Adress_Typ.PhysAdr);
+                // Datenlänge
+                m_DataLen = array[dataLen];
+
+                // APCI bestimmen
+                m_APCI = (APCI_Typ)((array[10] >> 6) & 0x03);
+
+                // Daten kopieren
+                m_value = new byte[m_DataLen];
+                for (ushort i = 0; i < m_DataLen; i++)
+                {
+                    m_value[i] = array[i + 10];
+                }
+                // APCI-Flag aus den Daten ausblenden
+                if (m_DataLen > 0) m_value[0] = (byte)((byte)m_value[0] & (byte)0x3F);
+
             }
-            // APCI-Flag aus den Daten ausblenden
-            if (emi.m_DataLen > 0) emi.m_value[0] = (byte)((byte)emi.m_value[0] & (byte)0x3F);
+            catch (Exception e)
+            {
+                
+                throw new Exception("Fehler in cEMI-Konstruktor aus Array",e);
+            }
 
-
-            return emi;
+            return ;
         }
 
 
+        /// <summary>
+        /// Konstruktor for EIS1 (bool)
+        /// </summary>
+        /// <param name="EIB Destination Adress"></param>
+        /// <param name="bool"></param>
+        public cEMI(EIB_Adress eIB_Adress, bool flag)
+        {
+            this.m_destination = eIB_Adress;
+            m_APCI = APCI_Typ.Send;
+            Eis1 = flag;
+        }
+
+
+        /// <summary>
+        /// Konstruktor for EIS3 (Zeit)
+        /// </summary>
+        /// <param name="EIB Destination Adress"></param>
+        /// <param name="bool"></param>
+        public cEMI(EIB_Adress eIB_Adress, DateTime time)
+        {
+            this.m_destination = eIB_Adress;
+            m_APCI = APCI_Typ.Send;
+            Eis3 = time;
+        }
+
+        ///// <summary>
+        ///// Konstruktor for EIS4 (Datum)
+        ///// </summary>
+        ///// <param name="EIB Destination Adress"></param>
+        ///// <param name="bool"></param>
+        //public cEMI(EIB_Adress eIB_Adress, bool p)
+        //{
+        //    this.m_destination = eIB_Adress;
+        //    m_APCI = APCI_Typ.Send;
+        //    Eis1 = p;
+        //}
+
+
+        /// <summary>
+        /// Konstruktor for EIS5 (float)
+        /// </summary>
+        /// <param name="EIB Destination Adress"></param>
+        /// <param name="Float"></param>
+        public cEMI(EIB_Adress eIB_Adress, float value)
+        {
+            this.m_destination = eIB_Adress;
+            m_APCI = APCI_Typ.Send;
+            Eis5 = (float)value;
+        }
+
+
+        ///// <summary>
+        ///// Konstruktor for EIS11 ()
+        ///// </summary>
+        ///// <param name="EIB Destination Adress"></param>
+        ///// <param name="Float"></param>
+        //public cEMI(EIB_Adress eIB_Adress, double value)
+        //{
+        //    this.m_destination = eIB_Adress;
+        //    m_APCI = APCI_Typ.Send;
+        //    Eis11 = value;
+        //}
+
+
+        /// <summary>
+        /// Liefert die daten als Byte-Array
+        /// </summary>
+        /// <returns></returns>
         public byte[] DataToByte()
         {
-
-            //if (structType.StructLayoutAttribute.Value != LayoutKind.Sequential)
-            //    throw new ArgumentException("structType ist keine Struktur oder nicht Sequentiell.");
 
             int size = m_DataLen+10;
 
@@ -128,11 +167,16 @@ namespace Knx
             tmp[7] = m_destination.LSB;
             tmp[8] = (byte)m_DataLen;
             tmp[9] = 0x00;
-            if (m_DataLen == 1)
+            for (int i = 0; i < m_DataLen; i++)
             {
-            tmp[10] = (byte)(0x80 | m_value[0]);
+                tmp[10+i] = m_value[i];
             }
-            // xxx für andere Datenlängen ergänzen
+
+
+            // APCI setzenbestimmen
+            //m_APCI = (APCI_Typ)((array[10] >> 6) & 0x03);
+            tmp[PosAPCI] = (byte)(((tmp[PosAPCI])&0x3F) | (int)m_APCI<<6);
+
             return tmp;
         }
 
@@ -144,12 +188,12 @@ namespace Knx
             {
                 case 1: erg = erg + "  EIS1=" + Eis1.ToString().PadRight(7);
                     break;
+                case 3: erg = erg + "  EIS5=" + Eis5.ToString().PadRight(7);
+                    break;
                 case 4: erg = erg + "  EIS3=" + Eis3.ToString("H:m:s").PadRight(7);
                     erg = erg + "  EIS4=" + Eis4.ToString("d").PadRight(7);
                     break;
                 case 5: erg = erg + "  EIS11=" + Eis11.ToString().PadRight(6);
-                    break;
-                case 3: erg = erg + "  EIS5=" + Eis5.ToString().PadRight(7);
                     break;
                 default:
                     break;
@@ -157,6 +201,7 @@ namespace Knx
             erg = erg + DataToRaw();
             return erg;
         }
+
 
         // Ausgabe der Rohdaten als String
         private String DataToRaw()
@@ -168,6 +213,7 @@ namespace Knx
             }
             return erg;
         }
+
 
         // Abfrage der Daten in EIS1-Darstellung (bool)
         public bool Eis1
@@ -182,9 +228,10 @@ namespace Knx
                 }
                 return m_value[0] == 1;
             }
-            //Set Fehlt
             set
             {
+                m_DataLen = 1;
+                m_value = new byte[m_DataLen];
                 if (value)
                     m_value[0] = (byte)( m_value[0] | ((byte)0x01));
                 else
@@ -212,9 +259,6 @@ namespace Knx
                 m_DataLen = 4;
                 m_value = new byte[4];
                 m_value[0] = 0;
-                m_value[1] = 10;
-                m_value[2] = 20;
-                m_value[3] = 30;
                 m_value[1] = (byte)value.Hour;
                 m_value[2] = (byte)value.Minute;
                 m_value[3] = (byte)value.Second;
@@ -246,6 +290,15 @@ namespace Knx
                     erg = new DateTime(2000, 1, 1, 0, 0, 0);
                 }
                 return erg;
+            }
+            set
+            {
+                m_DataLen = 4;
+                m_value = new byte[4];
+                m_value[0] = 0;
+                m_value[1] = (byte)value.Day;
+                m_value[2] = (byte)value.Month;
+                m_value[3] = (byte)(value.Year-2000);
             }
         }
 
@@ -310,6 +363,42 @@ namespace Knx
                 if (m_DataLen != 5) return 0;         // keine EIS11
                 return (uint)(m_value[1] * (1 << 24) + m_value[2] * (1 << 16) + m_value[3] * (1 << 8) + m_value[4]);
             }
+            set
+            {
+                m_DataLen = 5;
+                m_value = new byte[m_DataLen];
+                m_value[0] = 0;
+                m_value[1] = (byte)(value>>24);
+                m_value[2] = (byte)((value >> 16)&0xFF);
+                m_value[3] = (byte)((value >>  8) & 0xFF);
+                m_value[4] = (byte)((value ) & 0xFF);
+
+            }
+
+        }
+
+
+        public int DataLen 
+        {
+            get
+            {
+                return m_DataLen;
+            }
+            //set; 
+        }
+
+
+
+        public APCI_Typ APCI
+        {
+            get 
+            {
+                return m_APCI;
+            }
+            set
+            {
+                m_APCI = value;
+            }
         }
 
 
@@ -334,6 +423,8 @@ namespace Knx
                     return false;
             }
         }
+
+
 
 
     }
