@@ -75,7 +75,6 @@ namespace Knx
             }
             catch (Exception e)
             {
-                
                 throw new Exception("Fehler in cEMI-Konstruktor aus Array",e);
             }
 
@@ -108,17 +107,18 @@ namespace Knx
             Eis3 = time;
         }
 
-        ///// <summary>
-        ///// Konstruktor for EIS4 (Datum)
-        ///// </summary>
-        ///// <param name="EIB Destination Adress"></param>
-        ///// <param name="bool"></param>
-        //public cEMI(EIB_Adress eIB_Adress, bool p)
-        //{
-        //    this.m_destination = eIB_Adress;
-        //    m_APCI = APCI_Typ.Send;
-        //    Eis1 = p;
-        //}
+        /// <summary>
+        /// Konstruktor for EIS3/EIS4 (Datum oder Zeit)
+        /// </summary>
+        /// <param name="EIB Destination Adress"></param>
+        /// <param name="bool"></param>
+        public cEMI(EIB_Adress eIB_Adress, DateTime time, bool IsDatum)
+        {
+            this.m_destination = eIB_Adress;
+            m_APCI = APCI_Typ.Send;
+            if (IsDatum) Eis4 = time;
+            else Eis3 = time;
+        }
 
 
         /// <summary>
