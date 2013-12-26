@@ -22,24 +22,23 @@ namespace Knx
         {
             InitializeComponent();
             timer1.Start();
-            //tb_Log = tBResponse;
-            KnxCon.SetLog(AddLogText);
-           // KnxCon.SetReceivedFunction(NewTelegramReceived,this);
+  //          KnxCon.SetLog(AddLogText);
+            KnxCon.SetReceivedFunction(NewTelegramReceived,this);
 
         }
 
 
-        private void NewTelegramReceived(Byte[] teleBytes)
+        private void NewTelegramReceived(cEMI emi)
         {
-            tBResponse.AppendText(Environment.NewLine + KnxTools.BytesToString(teleBytes));
+            tBResponse.AppendText(Environment.NewLine + emi.ToString());
         }
 
 
 
         private void GetData()
         {
-            byte[] tele = KnxCon.GetData();
-            if (tele != null) tBResponse.AppendText(Environment.NewLine + KnxTools.BytesToString(tele));
+            cEMI emi = KnxCon.GetData();
+            if (emi != null) tBResponse.AppendText(Environment.NewLine + emi.ToString()); // KnxTools.BytesToString(tele));
             else tBResponse.AppendText(Environment.NewLine + "no Telegramm");
         }
 
@@ -88,19 +87,19 @@ namespace Knx
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            byte[] tele = KnxCon.GetData();
-            while (tele != null)
+           cEMI emi = KnxCon.GetData();
+            while (emi != null)
             {
-                if (tele[2] == 0x02)
-                {   // Controltelegramm
-                    tBResponse.AppendText(Environment.NewLine + "<C:" + KnxTools.BytesToString(tele));
-                }
-                else
+                //if (tele[2] == 0x02)
+                //{   // Controltelegramm
+                //    tBResponse.AppendText(Environment.NewLine + "<C:" + KnxTools.BytesToString(tele));
+                //}
+                //else
                 {   // Tunneltelegramm
-                    tBResponse.AppendText( Environment.NewLine + "<D:" + KnxTools.BytesToString(tele));
+                    tBResponse.AppendText( Environment.NewLine + "Data:" + emi.ToString()); // KnxTools.BytesToString(tele));
                 }
 
-                tele = KnxCon.GetData();
+                emi = KnxCon.GetData();
             }
         }
 

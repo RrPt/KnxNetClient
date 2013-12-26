@@ -224,6 +224,25 @@ namespace Knx
         }
 
 
+
+        internal void DataAck(byte SeqCounter)
+        {
+            List<byte> l = new List<byte>();
+
+            KnxIpHeader header = new KnxIpHeader(knxnetip_services.TUNNELLING_ACK);
+
+            header.Length = (short)(header.bytes.Length + 4);
+            l.AddRange(header.bytes);
+            l.Add(0x04);
+            l.Add(con.channelId);
+            l.Add(SeqCounter);
+            l.Add(0x00);
+
+            _bytes = l.ToArray();
+
+        }
+
+
         internal void Data(cEMI emi,byte SeqCounter)
         {
             List<byte> l = new List<byte>();
@@ -241,6 +260,8 @@ namespace Knx
             _bytes = l.ToArray();
         }
 
+
+
     }
 
     class KnxNetConnection
@@ -250,7 +271,7 @@ namespace Knx
         public int gatewayPort = 3671;
         public string gatewayIp;
         public delegate void LoggingDelegate(string Text);
-        public delegate void TelegramReceivedDelegate(Byte[] teleBytes);
+        public delegate void TelegramReceivedDelegate(cEMI emi);
 
         // private Member
         const int OpenTimeout = 5;
@@ -258,7 +279,7 @@ namespace Knx
         UdpClient udpClient ;
         IAsyncResult ar;
         int AnzTelegramme = 0;
-        Queue<byte[]> fromKnxQueue = new Queue<byte[]>();
+        Queue<cEMI> fromKnxQueue = new Queue<cEMI>();
         byte _channelId = 0;
         private static Timer timerHeartbeat;
         LoggingDelegate Log = null;
@@ -467,6 +488,28 @@ namespace Knx
         }
 
 
+
+        internal void DataAck(byte seqNo)
+        {
+            try
+            {
+                KnxIpTelegramm Tele = new KnxIpTelegramm(this);
+                Tele.DataAck(seqNo);
+                byte[] TeleBytes = Tele.bytes;
+
+                // KnxNetForm
+                Log("d>:" + KnxTools.BytesToString(TeleBytes));
+
+                udpClient.Send(TeleBytes, TeleBytes.Length);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+            return;
+        }
+
+
         /// <summary>
         /// Daten auf den Bus senden
         /// </summary>
@@ -565,6 +608,8 @@ namespace Knx
             {   // es ist kein Controlltelegramm
                 if (receiveBytes[3] == 0x20)
                 {   // es ist ein Datentelegramm
+                    // erst ein Ack senden
+                    DataAck(receiveBytes[8]);
                     // Header entfernen
                     int idx = 0x0A;
                     int len = receiveBytes.Length - idx;
@@ -577,13 +622,13 @@ namespace Knx
 
                     if (TelegramReceived != null)
                     {   // Ein Delegate ist eingerichtet, dann diesen aufrufen
-                        TelegramWeiterleiten(receiveBytes);
+                        TelegramWeiterleiten(emi);
                     }
                     else
                     {   // Kein Delegate ist eingerichtet, dann in die Warteschlange einreichen
                         lock (fromKnxQueue)
                         {
-                            fromKnxQueue.Enqueue(receiveBytes);
+                            fromKnxQueue.Enqueue(emi);
                         }
                     }
                 }
@@ -600,25 +645,25 @@ namespace Knx
         /// Prüft ob für die Weiterleitung dr Telegramme ein Invoke notwendig ist und führt dies gegebenenfalls durch
         /// </summary>
         /// <param name="receiveBytes"></param>
-        private void TelegramWeiterleiten(byte[] receiveBytes)
+        private void TelegramWeiterleiten(cEMI emi)
         {
             if (receiveControl != null)
             {
                 if (receiveControl.InvokeRequired)
                 {
                     Console.WriteLine("Invoke KnxNet.TelegramReceived(...)");
-                    receiveControl.BeginInvoke(new TelegramReceivedDelegate(TelegramWeiterleiten), new object[] { receiveBytes });
+                    receiveControl.BeginInvoke(new TelegramReceivedDelegate(TelegramWeiterleiten), new object[] { emi });
                 }
                 else
                 {
                     Console.WriteLine("KnxNet.TelegramReceived(...) ausführen");
-                    TelegramReceived(receiveBytes);
+                    TelegramReceived(emi);
                 }
             }
             else
             {
                 Console.WriteLine("KnxNet.TelegramReceived(...) ausführen");
-                TelegramReceived(receiveBytes);
+                TelegramReceived(emi);
             }
         }
 
@@ -638,15 +683,15 @@ namespace Knx
         /// Abrufend der Daten (Pull-Verfahren), wenn diese nicht über einen Delegate automatisch gemeldet werden
         /// </summary>
         /// <returns></returns>
-        internal Byte[] GetData()
+        internal cEMI GetData()
         {
-            byte[] bytes;
+            cEMI emi;
             lock (fromKnxQueue)
             {
-                if (fromKnxQueue.Count > 0) bytes = (byte[]) fromKnxQueue.Dequeue();
-                else bytes = null;
+                if (fromKnxQueue.Count > 0) emi = (cEMI) fromKnxQueue.Dequeue();
+                else emi = null;
             }
-            return bytes;
+            return emi;
         }
 
 
