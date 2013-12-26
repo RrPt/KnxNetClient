@@ -134,17 +134,17 @@ namespace Knx
         }
 
 
-        ///// <summary>
-        ///// Konstruktor for EIS11 ()
-        ///// </summary>
-        ///// <param name="EIB Destination Adress"></param>
-        ///// <param name="Float"></param>
-        //public cEMI(EIB_Adress eIB_Adress, double value)
-        //{
-        //    this.m_destination = eIB_Adress;
-        //    m_APCI = APCI_Typ.Send;
-        //    Eis11 = value;
-        //}
+        /// <summary>
+        /// Konstruktor for EIS11 (long)
+        /// </summary>
+        /// <param name="EIB Destination Adress"></param>
+        /// <param name="value"></param>
+        public cEMI(EIB_Adress eIB_Adress, uint value)
+        {
+            this.m_destination = eIB_Adress;
+            m_APCI = APCI_Typ.Send;
+            Eis11 = value;
+        }
 
 
         /// <summary>
@@ -310,7 +310,11 @@ namespace Knx
         {
             get
             {
-                if (m_DataLen != 3) return 0.0f;         // keine EIS5
+//                if (m_DataLen != 3) return 0.0f;         // keine EIS5
+                if (m_DataLen != 3)
+                {   // keine EIS5
+                    throw new Exception("Kein EIS5-Datenformat");
+                }
                 int inv = m_value[1] * 256 + m_value[2];
                 short e, m;
 
@@ -360,7 +364,12 @@ namespace Knx
         {
             get
             {
-                if (m_DataLen != 5) return 0;         // keine EIS11
+                //if (m_DataLen != 5) return 0;         // keine EIS11
+                if (m_DataLen != 5)
+                {   // keine EIS11
+                    throw new Exception("Kein EIS11-Datenformat");
+                }
+
                 return (uint)(m_value[1] * (1 << 24) + m_value[2] * (1 << 16) + m_value[3] * (1 << 8) + m_value[4]);
             }
             set

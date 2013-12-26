@@ -7,8 +7,15 @@ using System.Collections;
 using System.Timers;
 using EIBDef;
 
+
 namespace Knx
 {
+    enum KnxConnectionState
+    {
+        unkonown, conReq, connected, disConReq, disconnected,
+        hbReq
+    }
+
     enum knxnetip_services
 	{
         SEARCH_REQUEST                =  0x0201,
@@ -149,7 +156,6 @@ namespace Knx
 
     }
 
-
     class KnxIpTelegramm
     {
         byte[] _bytes;
@@ -237,46 +243,113 @@ namespace Knx
 
     }
 
-
     class KnxNetConnection
-    {
+    {   // öffentliche Member
         public IPAddress myIP;
         public int clientPort = 18001;
-
         public int gatewayPort = 3671;
         public string gatewayIp;
+        public delegate void LoggingDelegate(string Text);
+        public delegate void TelegramReceivedDelegate(Byte[] teleBytes);
 
+        // private Member
+        const int OpenTimeout = 5;
+        KnxConnectionState ConnectionState = KnxConnectionState.unkonown;
         UdpClient udpClient ;
         IAsyncResult ar;
         int AnzTelegramme = 0;
         Queue<byte[]> fromKnxQueue = new Queue<byte[]>();
-        public byte channelId = 0;
+        byte _channelId = 0;
         private static Timer timerHeartbeat;
-        public delegate void LoggingDelegate(string Text);
         LoggingDelegate Log = null;
+        TelegramReceivedDelegate TelegramReceived = null;
         byte SeqCounter = 0;
+        System.Windows.Forms.Control receiveControl;
 
+        /// <summary>
+        /// Setzt die Funktion, an die Logausgaben übergeben werden sollen
+        /// wird keine angegeben so wird LogIntern verwendet
+        /// </summary>
+        /// <param name="LogFunction"></param>
+        public void SetLog(LoggingDelegate LogFunction)
+        {
+            Log = LogFunction;
+        }
+
+
+        /// <summary>
+        /// Verwendete Logfunktion, falls keine externe über SetLog gemeldet wurde
+        /// </summary>
+        /// <param name="txt"></param>
+        private void LogIntern(String txt)
+        {
+            Console.WriteLine(txt);
+        }
+
+
+        /// <summary>
+        /// Setzt die Funktion, an die empfangene Telegramme übergeben werden sollen
+        /// wird keine angegeben so werden diese in eine interne Queue gespeichert
+        /// </summary>
+        /// <param name="ReceivedFunction"> Funktion an die die Telegrammdaten übergeben werden soll</param>
+        /// <param name="control">Angabe eines evtl. Controls, falls ein Invoke durchgeführt werden muss.
+        ///                       Kann auch null gesetzt werden</param>
+        public void SetReceivedFunction(TelegramReceivedDelegate ReceivedFunction, System.Windows.Forms.Control control)
+        {
+            TelegramReceived = ReceivedFunction;
+            receiveControl = control;
+        }
+
+        /// <summary>
+        /// Abfrage der ChannnelId die vom Gateway für diese Verbindung festgelegt wird.
+        /// Dieser werdt ist erst nach erfolgreichem Open gültig, ansonsten 0
+        /// </summary>
+        public byte channelId
+        {
+            get
+            {
+                return _channelId;
+            }
+        }
+
+
+
+        /// <summary>
+        /// Konstruktor, legt neue KnxNet Connection an, diese wird aber noch nicht geöffnet
+        /// </summary>
         public KnxNetConnection()
         {
+            Log = LogIntern;
             IPHostEntry Host = Dns.GetHostEntry(Dns.GetHostName());
             myIP = Host.AddressList[1];
-            udpClient = new UdpClient(clientPort);
+            while (udpClient == null)
+            {
+                try
+                {
+
+                    udpClient = new UdpClient(clientPort);
+                    Log("ClientPort " + clientPort + " geöffnet");
+
+                }
+                catch (Exception)
+                {
+                    Log("ClientPort " + clientPort + " bereits belegt");
+                    clientPort++;
+                }
+            }
             timerHeartbeat = new System.Timers.Timer(60000);
             timerHeartbeat.Elapsed += new ElapsedEventHandler(OnTimedEventHeartbeat);
         }
 
-        public void SetLog(LoggingDelegate LogFunction)
-        {
-            Log = LogFunction; 
-        }
+
 
         /// <summary>
         /// Öffnen der Verbindung
         /// </summary>
         /// <param name="gatewayIp"> IP Adresse des KnxIp-Gateways</param>
-        internal byte[] Open(string gatewayIp)
+        /// <returns>Rückgabewert true bedeutet die Verbindung konnte geöffnet werden</returns>
+        internal bool Open(string gatewayIp)
         {
-            Byte[] receiveBytes = null;
             this.gatewayIp = gatewayIp;
 
             try
@@ -292,6 +365,7 @@ namespace Knx
                 Log("O>:" + KnxTools.BytesToString(TeleBytes));
 
                 udpClient.Send(TeleBytes,TeleBytes.Length);
+                ConnectionState = KnxConnectionState.conReq;
 
            }
             catch (Exception e)
@@ -302,19 +376,28 @@ namespace Knx
             // nun den Listener starten
             ar = udpClient.BeginReceive(new AsyncCallback(ReceiveCallback), AnzTelegramme);
 
+            // Warten auf Antwort, maximal OpenTimeout Sekunden
+            int i = 0;
+
+            while ((i < 10 * OpenTimeout) & (ConnectionState != KnxConnectionState.connected))
+            {
+                System.Threading.Thread.Sleep(100);
+                i++;
+            }
+
             // Den Heartbeat Timer starten
             timerHeartbeat.Start();
 
-            return receiveBytes;
+            return (ConnectionState == KnxConnectionState.connected) ;
         }
 
 
         /// <summary>
         /// Schließen der Verbindung
         /// </summary>
-        internal byte []  Close()
+        /// <returns>Rückgabewert true bedeutet die Verbindung konnte geschlossen werden</returns>
+        internal bool Close()
         {
-            Byte[] receiveBytes = null;
             try
             {
                 KnxIpTelegramm Tele = new KnxIpTelegramm(this);
@@ -325,8 +408,17 @@ namespace Knx
                 Log("C>:" + KnxTools.BytesToString(TeleBytes));
 
                 udpClient.Send(TeleBytes, TeleBytes.Length);
+                ConnectionState = KnxConnectionState.disConReq;
 
-                //IPEndPoint RemoteIpEndPoint = new IPEndPoint(IPAddress.Any, 0);
+                // Warten auf Antwort, maximal OpenTimeout Sekunden
+                int i = 0;
+
+                while ((i < 10 * OpenTimeout) & (ConnectionState != KnxConnectionState.disconnected))
+                {
+                    System.Threading.Thread.Sleep(100);
+                    i++;
+                }
+
 
                 // Den Heartbeat Timer stoppen
                 timerHeartbeat.Stop();
@@ -341,16 +433,20 @@ namespace Knx
             {
                 Console.WriteLine(e.ToString());
             }
-            return receiveBytes;
+            return ConnectionState == KnxConnectionState.disconnected;
         }
 
 
         /// <summary>
         /// HerzschlagRequest der Verbindung
         /// </summary>
-        internal byte[] Heartbeat()
+        /// Sendet zyklich ein Telegramm an das Gateway dass die Verbindung noch aktiv ist
+        internal void Heartbeat()
         {
-            Byte[] receiveBytes = null;
+            if (ConnectionState != KnxConnectionState.connected)
+            {   // Upps, da stimmt was mit der Verbindung nicht
+                Log("Connection ist im Status:" + ConnectionState.ToString());
+            }
             try
             {
                 KnxIpTelegramm Tele = new KnxIpTelegramm(this);
@@ -361,21 +457,22 @@ namespace Knx
                Log("H>:" + KnxTools.BytesToString(TeleBytes));
 
                 udpClient.Send(TeleBytes, TeleBytes.Length);
+                ConnectionState = KnxConnectionState.hbReq;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
             }
-            return receiveBytes;
+            return ;
         }
 
 
         /// <summary>
         /// Daten auf den Bus senden
         /// </summary>
-        internal byte[] Send(cEMI emi)
+        /// <param name="emi">Telegrammdaten die gesendet werden sollen</param>
+        internal void Send(cEMI emi)
         {
-            Byte[] receiveBytes = null;
             try
             {
                 KnxIpTelegramm Tele = new KnxIpTelegramm(this);
@@ -391,11 +488,14 @@ namespace Knx
             {
                 Console.WriteLine(e.ToString());
             }
-            return receiveBytes;
+            return ;
         }
 
 
-
+        /// <summary>
+        /// Diese Funktion wird vom UDP-Client aufgerufen wenn ein neues Telegramm eingetroffen ist
+        /// </summary>
+        /// <param name="ar"></param>
         public void ReceiveCallback(IAsyncResult ar)
         {
             int Anz = (int)ar.AsyncState;
@@ -404,42 +504,87 @@ namespace Knx
             Anz++;
             Console.WriteLine("Telegr[" + Anz + "]=" + KnxTools.BytesToString(receiveBytes));
 
-            // prüfen ob ControlTelegramm
+            // prüfen ob es ein ControlTelegramm ist
             if (receiveBytes[2] == 0x02)
-            {   // Controlltelegramm
+            {   // es ist ein Controlltelegramm
                 switch (receiveBytes[3])
                 {
+                    case 0x01:  // Search Request
+                        Console.WriteLine("Search Request from Gateway");
+                        Log("<S:" + KnxTools.BytesToString(receiveBytes));
+                        break;
+                    case 0x02:  // Search Response
+                        _channelId = receiveBytes[6];
+                        Console.WriteLine("Search Response from Gateway");
+                        Log("<s:" + KnxTools.BytesToString(receiveBytes));
+                        break;
+                    case 0x03:  // Description Request
+                        Console.WriteLine("Description Request from Gateway");
+                        Log("<D:" + KnxTools.BytesToString(receiveBytes));
+                        break;
+                    case 0x04:  // Description Response
+                        _channelId = receiveBytes[6];
+                        Console.WriteLine("Description Response from Gateway");
+                        Log("<d:" + KnxTools.BytesToString(receiveBytes));
+                        break;
+                    case 0x05:  // Connect Request
+                        Console.WriteLine("Connection Request from Gateway");
+                        Log("<O:" + KnxTools.BytesToString(receiveBytes));
+                        break;
                     case 0x06:  // Connect Response
-                        channelId = receiveBytes[6];
-                        Console.WriteLine("ChannelId = " + channelId);
+                        _channelId = receiveBytes[6];
+                        Console.WriteLine("ChannelId = " + _channelId);
+                        Log("<o:" + KnxTools.BytesToString(receiveBytes));
+                        if (receiveBytes[7] == 0) ConnectionState = KnxConnectionState.connected;
+                        break;
+                    case 0x07:  // Heartbeat Request
+                        Console.WriteLine("HeartbeatRequest for ChannelId = " + _channelId);
+                        Log("<H:" + KnxTools.BytesToString(receiveBytes));
                         break;
                     case 0x08:  // Heartbeat Response
-                        Console.WriteLine("HeartbeatResponse from ChannelId = " + channelId);
+                        Console.WriteLine("HeartbeatResponse from ChannelId = " + _channelId);
+                        Log("<h:" + KnxTools.BytesToString(receiveBytes));
+                        if (receiveBytes[7] == 0) ConnectionState = KnxConnectionState.connected;
+                        break;
+                    case 0x09:  // Disconnect Request
+                        Console.WriteLine("DisconnectRequest for ChannelId = " + _channelId);
+                        Log("<C:" + KnxTools.BytesToString(receiveBytes));
                         break;
                     case 0x0A:  // Disconnect Response
-                        Console.WriteLine("Disconnected ChannelId = " + channelId);
+                        Console.WriteLine("Disconnected ChannelId = " + _channelId);
+                        Log("<c:" + KnxTools.BytesToString(receiveBytes));
+                        if (receiveBytes[7]==0) ConnectionState = KnxConnectionState.disconnected;
                         break;
-                    default: break;
+                    default:
+                        Log("<?:" + KnxTools.BytesToString(receiveBytes));
+                        break;
                 }
 
-                Log("<c:" + KnxTools.BytesToString(receiveBytes));
             }
             else if (receiveBytes[2] == 0x04)
-            {   // Kein Controlltelegramm
+            {   // es ist kein Controlltelegramm
                 if (receiveBytes[3] == 0x20)
-                {   // Datentelegramm
+                {   // es ist ein Datentelegramm
+                    // Header entfernen
                     int idx = 0x0A;
                     int len = receiveBytes.Length - idx;
 
                     byte[] t = new byte[len];
                     Array.Copy(receiveBytes, idx, t, 0, len);
-
+                    // und cemi Telegramm daraus erzeugen
                     cEMI emi = new cEMI(t);
                     Log(emi.ToString());
 
-                    lock (fromKnxQueue)
-                    {
-                        fromKnxQueue.Enqueue(receiveBytes);
+                    if (TelegramReceived != null)
+                    {   // Ein Delegate ist eingerichtet, dann diesen aufrufen
+                        TelegramWeiterleiten(receiveBytes);
+                    }
+                    else
+                    {   // Kein Delegate ist eingerichtet, dann in die Warteschlange einreichen
+                        lock (fromKnxQueue)
+                        {
+                            fromKnxQueue.Enqueue(receiveBytes);
+                        }
                     }
                 }
                 else if (receiveBytes[3] == 0x21)
@@ -450,11 +595,49 @@ namespace Knx
             ar = udpClient.BeginReceive(new AsyncCallback(ReceiveCallback), Anz);
         }
 
+
+        /// <summary>
+        /// Prüft ob für die Weiterleitung dr Telegramme ein Invoke notwendig ist und führt dies gegebenenfalls durch
+        /// </summary>
+        /// <param name="receiveBytes"></param>
+        private void TelegramWeiterleiten(byte[] receiveBytes)
+        {
+            if (receiveControl != null)
+            {
+                if (receiveControl.InvokeRequired)
+                {
+                    Console.WriteLine("Invoke KnxNet.TelegramReceived(...)");
+                    receiveControl.BeginInvoke(new TelegramReceivedDelegate(TelegramWeiterleiten), new object[] { receiveBytes });
+                }
+                else
+                {
+                    Console.WriteLine("KnxNet.TelegramReceived(...) ausführen");
+                    TelegramReceived(receiveBytes);
+                }
+            }
+            else
+            {
+                Console.WriteLine("KnxNet.TelegramReceived(...) ausführen");
+                TelegramReceived(receiveBytes);
+            }
+        }
+
+
+        /// <summary>
+        /// Timer für den Heartbeat ruft diese Funktion
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="e"></param>
         private void OnTimedEventHeartbeat(object source, ElapsedEventArgs e)
         {
             Heartbeat();
         }
 
+
+        /// <summary>
+        /// Abrufend der Daten (Pull-Verfahren), wenn diese nicht über einen Delegate automatisch gemeldet werden
+        /// </summary>
+        /// <returns></returns>
         internal Byte[] GetData()
         {
             byte[] bytes;
