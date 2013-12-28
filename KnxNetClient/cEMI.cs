@@ -25,7 +25,7 @@ namespace Knx
         // Daten
         EIB_Adress m_source = new EIB_Adress(0);    // physik. Absenderaddr (wird vom Gateway überschrieben)
         EIB_Adress m_destination = null;            // Zieladr
-        byte[] m_value = null;                      // Inhalt des Telegramme (uninterpretiert)
+        byte[] m_value = null;                      // Dateninhalt des Telegramms (uninterpretiert)
         DateTime m_ReceiveTime = DateTime.MinValue; // Zeit des anlegens
         int m_DataLen=0;                            // Datenlänge
         APCI_Typ m_APCI = APCI_Typ.unnown;          // APCI-Typ
@@ -65,6 +65,8 @@ namespace Knx
 
                 // Daten kopieren
                 m_value = new byte[m_DataLen];
+                Array.Copy(array, 10, m_value, 0, m_DataLen);
+
                 for (ushort i = 0; i < m_DataLen; i++)
                 {
                     m_value[i] = array[i + 10];
@@ -151,7 +153,7 @@ namespace Knx
         /// Liefert die daten als Byte-Array
         /// </summary>
         /// <returns></returns>
-        public byte[] DataToByte()
+        public byte[] GetTelegramm()
         {
 
             int size = m_DataLen+10;
@@ -198,13 +200,13 @@ namespace Knx
                 default:
                     break;
             }
-            erg = erg + DataToRaw();
+            erg = erg + DataToString();
             return erg;
         }
 
 
         // Ausgabe der Rohdaten als String
-        private String DataToRaw()
+        public String DataToString()
         {
             String erg = "";
             for (ushort i = 0; i < m_DataLen; i++)
@@ -213,6 +215,51 @@ namespace Knx
             }
             return erg;
         }
+
+
+        /// <summary>
+        /// Abfrage der Quelle 
+        /// </summary>
+         public EIB_Adress sourceAdr
+        {
+            get
+            {
+                return m_source;
+            }
+            //set
+            //{
+            //}
+        }
+
+         /// <summary>
+         /// Abfrage des Ziels 
+         /// </summary>
+         public EIB_Adress destinationAdr
+         {
+             get
+             {
+                 return m_destination;
+             }
+             //set
+             //{
+             //}
+         }
+
+
+         /// <summary>
+         /// Abfrage des Ziels 
+         /// </summary>
+         public DateTime receiveTime
+         {
+             get
+             {
+                 return m_ReceiveTime;
+             }
+             //set
+             //{
+             //}
+         }
+
 
 
         // Abfrage der Daten in EIS1-Darstellung (bool)
@@ -278,10 +325,10 @@ namespace Knx
 
                 try
                 {
-                    if (m_value[2] > 12) m_value[2] = 1;
-                    if (m_value[1] > 31) m_value[1] = 1;
-                    if (m_value[2] < 1) m_value[2] = 1;
-                    if (m_value[1] < 1) m_value[1] = 1;
+                    //if (m_value[2] > 12) m_value[2] = 1;
+                    //if (m_value[1] > 31) m_value[1] = 1;
+                    //if (m_value[2] < 1) m_value[2] = 1;
+                    //if (m_value[1] < 1) m_value[1] = 1;
                     erg = new DateTime(m_value[3] + 2000, m_value[2], m_value[1], 0, 0, 0);
 
                 }
@@ -434,8 +481,10 @@ namespace Knx
         }
 
 
-
-
+        internal byte[] GetRawData()
+        {
+            return m_value;
+        }
     }
 
 }

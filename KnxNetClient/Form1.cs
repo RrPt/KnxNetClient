@@ -21,16 +21,23 @@ namespace Knx
         public KnxNetForm()
         {
             InitializeComponent();
+            HDKnxHandler.Load();
             timer1.Start();
-  //          KnxCon.SetLog(AddLogText);
-            KnxCon.SetReceivedFunction(NewTelegramReceived,this);
+  //        KnxCon.SetLog(AddLogText);
+  //        KnxCon.SetReceivedFunction(NewTelegramReceived,this);
+            KnxCon.SetDataChangedFunction(DataChanged, this);
 
         }
 
 
         private void NewTelegramReceived(cEMI emi)
         {
-            tBResponse.AppendText(Environment.NewLine + emi.ToString());
+            tBResponse.AppendText(Environment.NewLine + "    " +emi.ToString());
+        }
+
+        private void DataChanged(HDKnx hdKnx)
+        {
+            tBResponse.AppendText(Environment.NewLine + hdKnx.ToString());
         }
 
 
@@ -114,6 +121,16 @@ namespace Knx
             cEMI emi = new cEMI(new EIB_Adress(64), true);
             emi.APCI = APCI_Typ.Request;
             KnxCon.Send(emi);
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            HDKnxHandler.WriteParametersToFile("KnxClientW.xml");
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            HDKnxHandler.ReadParametersFromFile("KnxClient.xml");
         }
 
     }

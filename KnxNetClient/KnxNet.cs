@@ -255,7 +255,7 @@ namespace Knx
             l.Add(con.channelId);
             l.Add(SeqCounter);
             l.Add(0x00);
-            l.AddRange(emi.DataToByte());
+            l.AddRange(emi.GetTelegramm());
 
             _bytes = l.ToArray();
         }
@@ -272,6 +272,7 @@ namespace Knx
         public string gatewayIp;
         public delegate void LoggingDelegate(string Text);
         public delegate void TelegramReceivedDelegate(cEMI emi);
+        public delegate void DataChangedDelegate(HDKnx hdKnx);
 
         // private Member
         const int OpenTimeout = 5;
@@ -284,8 +285,11 @@ namespace Knx
         private static Timer timerHeartbeat;
         LoggingDelegate Log = null;
         TelegramReceivedDelegate TelegramReceived = null;
+        DataChangedDelegate dataChanged = null;
         byte SeqCounter = 0;
-        System.Windows.Forms.Control receiveControl;
+        System.Windows.Forms.Control telegramReceivedControl;
+        System.Windows.Forms.Control dataChangedControl;
+        
 
         /// <summary>
         /// Setzt die Funktion, an die Logausgaben übergeben werden sollen
@@ -318,8 +322,24 @@ namespace Knx
         public void SetReceivedFunction(TelegramReceivedDelegate ReceivedFunction, System.Windows.Forms.Control control)
         {
             TelegramReceived = ReceivedFunction;
-            receiveControl = control;
+            telegramReceivedControl = control;
         }
+
+
+        /// <summary>
+        /// Setzt die Funktion, an die empfangene Telegramme übergeben werden sollen
+        /// wird keine angegeben so werden diese in eine interne Queue gespeichert
+        /// </summary>
+        /// <param name="ReceivedFunction"> Funktion an die die Telegrammdaten übergeben werden soll</param>
+        /// <param name="control">Angabe eines evtl. Controls, falls ein Invoke durchgeführt werden muss.
+        ///                       Kann auch null gesetzt werden</param>
+        public void SetDataChangedFunction(DataChangedDelegate DataChangedFunction, System.Windows.Forms.Control control)
+        {
+            dataChanged = DataChangedFunction;
+            dataChangedControl = control;
+        }
+
+        public bool QueueEnable { get; set; }
 
         /// <summary>
         /// Abfrage der ChannnelId die vom Gateway für diese Verbindung festgelegt wird.
@@ -340,6 +360,7 @@ namespace Knx
         /// </summary>
         public KnxNetConnection()
         {
+            QueueEnable = false;
             Log = LogIntern;
             IPHostEntry Host = Dns.GetHostEntry(Dns.GetHostName());
             myIP = Host.AddressList[1];
@@ -619,18 +640,30 @@ namespace Knx
                     // und cemi Telegramm daraus erzeugen
                     cEMI emi = new cEMI(t);
                     Log(emi.ToString());
+                    // Suchen des passenden HDKnx Objektes
+                    HDKnx hdKnx = HDKnxHandler.GetObject(emi);
+                    // und dort den Wert setzen, falls erforderlich
+                    hdKnx.SetValue(emi);
+
+                    // geänderte Daten melden falls gewünscht
+                    if (dataChanged != null)
+                    {
+                        DataCangedWeiterleiten(hdKnx);
+                    }
 
                     if (TelegramReceived != null)
                     {   // Ein Delegate ist eingerichtet, dann diesen aufrufen
                         TelegramWeiterleiten(emi);
                     }
-                    else
-                    {   // Kein Delegate ist eingerichtet, dann in die Warteschlange einreichen
+                    if (QueueEnable)
+                    {   // in Queue speichern
                         lock (fromKnxQueue)
                         {
                             fromKnxQueue.Enqueue(emi);
                         }
                     }
+
+
                 }
                 else if (receiveBytes[3] == 0x21)
                 {   // Bestätigung eines Datentelegramm
@@ -647,12 +680,12 @@ namespace Knx
         /// <param name="receiveBytes"></param>
         private void TelegramWeiterleiten(cEMI emi)
         {
-            if (receiveControl != null)
+            if (telegramReceivedControl != null)
             {
-                if (receiveControl.InvokeRequired)
+                if (telegramReceivedControl.InvokeRequired)
                 {
                     Console.WriteLine("Invoke KnxNet.TelegramReceived(...)");
-                    receiveControl.BeginInvoke(new TelegramReceivedDelegate(TelegramWeiterleiten), new object[] { emi });
+                    telegramReceivedControl.BeginInvoke(new TelegramReceivedDelegate(TelegramWeiterleiten), new object[] { emi });
                 }
                 else
                 {
@@ -666,6 +699,44 @@ namespace Knx
                 TelegramReceived(emi);
             }
         }
+
+
+        /// <summary>
+        /// Prüft ob für die Weiterleitung dr Telegramme ein Invoke notwendig ist und führt dies gegebenenfalls durch
+        /// </summary>
+        /// <param name="receiveBytes"></param>
+        private void DataCangedWeiterleiten(HDKnx hdKnx)
+        {
+            try
+            {
+                if (dataChangedControl != null)
+                {
+                    if (dataChangedControl.InvokeRequired)
+                    {
+                        Console.WriteLine("Invoke KnxNet.DataCangedWeiterleiten(...)");
+                        dataChangedControl.BeginInvoke(new DataChangedDelegate(DataCangedWeiterleiten), new object[] { hdKnx });
+                    }
+                    else
+                    {
+                        Console.WriteLine("KnxNet.DataCangedWeiterleiten(" + hdKnx + ") ausführen 1");
+                        dataChanged(hdKnx);
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("KnxNet.DataCangedWeiterleiten(" + hdKnx + ") ausführen 2");
+                    dataChanged(hdKnx);
+                }
+
+            }
+            catch (Exception e)
+            {
+                
+                throw e;
+            }
+        }
+
+
 
 
         /// <summary>

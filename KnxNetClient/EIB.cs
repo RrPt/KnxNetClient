@@ -10,14 +10,14 @@ using System.Net.Sockets;
 
 namespace EIBDef
 {
-    enum EIB_Adress_Typ  {PhysAdr,GroupAdr};
+    public enum EIB_Adress_Typ  {PhysAdr,GroupAdr};
     enum APCI_Typ { Request, Answer, Send, unnown };
     enum EIS_Typ { unknown, EIS1, EIS2, EIS3, EIS4, EIS5, EIS6, EIS7, EIS8, EIS9, EIS10, EIS11 };
 
     ///<summary >
     ///Definiert eine EIB-Bus Adresse
     ///</summary>
-    class EIB_Adress
+    public class EIB_Adress : IComparable 
     {
         private const int MAX_ADR = 0xFFFF;                         // max. Adr.
         private const int MIN_ADR = 0x0;                            // min. Adr.
@@ -46,6 +46,13 @@ namespace EIBDef
         public EIB_Adress(ushort HG, ushort MG, ushort UG)
         {
             Set_GA(HG, MG, UG);
+        }
+
+        public EIB_Adress(string EibAdrString)
+        {
+            m_Adr = (ushort)0;
+            m_Typ = EIB_Adress_Typ.GroupAdr;
+            // @xxx muss noch gemacht werden
         }
 
 
@@ -224,6 +231,20 @@ namespace EIBDef
             if (m_Typ != obj.m_Typ) return false;
             return m_Adr == obj.m_Adr;
         }
+
+        public int CompareTo(object obj)
+        {
+            if (obj == null) return 1;
+            EIB_Adress otherAdr = obj as EIB_Adress;
+
+            if (m_Typ != otherAdr.m_Typ) return 1;
+
+            if (otherAdr != null)
+                return this.m_Adr.CompareTo(otherAdr.m_Adr);
+            else
+                throw new ArgumentException("Object is not a EIB_Adress"); ;
+        }
+
     }
 
 
@@ -420,9 +441,6 @@ namespace EIBDef
                 m_DataLen = 4;
                 m_value = new byte[4];
                 m_value[0] = 0;
-                m_value[1] = 10;
-                m_value[2] = 20;
-                m_value[3] = 30;
                 m_value[1] = (byte)value.Hour;
                 m_value[2] = (byte)value.Minute;
                 m_value[3] = (byte)value.Second;
@@ -442,10 +460,10 @@ namespace EIBDef
 
                 try
                 {
-                    if (m_value[2] > 12) m_value[2] = 1;
-                    if (m_value[1] > 31) m_value[1] = 1;
-                    if (m_value[2] < 1) m_value[2] = 1;
-                    if (m_value[1] < 1) m_value[1] = 1;
+                    //if (m_value[2] > 12) m_value[2] = 1;
+                    //if (m_value[1] > 31) m_value[1] = 1;
+                    //if (m_value[2] < 1) m_value[2] = 1;
+                    //if (m_value[1] < 1) m_value[1] = 1;
                     erg = new DateTime(m_value[3] + 2000, m_value[2], m_value[1], 0, 0, 0);
 
                 }
@@ -519,7 +537,7 @@ namespace EIBDef
                 return (uint)(m_value[1] * (1 << 24) + m_value[2] * (1 << 16) + m_value[3] * (1 << 8) + m_value[4]);
             }
         }
-
+        
 
         // Pruft ob das Telegramm dem EIS-Typ entsprechen kann
         public bool IsEisTyp(EIS_Typ type)
