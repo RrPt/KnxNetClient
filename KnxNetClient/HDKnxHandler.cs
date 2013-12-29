@@ -23,10 +23,10 @@ namespace Knx
     public class XmlEibItem
     {
         public String name = "nix";
-        public String EisName = null;
-        //public Type EisTyp;
-        public String unit = "?";
         public String EibAdress = "0/0/0";
+        public String EisName = null;
+        public String Typ = "Leistung";
+        public String unit = "?";
     }
 
     [Serializable]
@@ -56,7 +56,7 @@ namespace Knx
                 XmlEibItem p = new XmlEibItem();
                 p.name = hdKnx.name;
                 p.EisName = hdKnx.GetType().ToString();
-                //p.EisTyp = hdKnx.GetType();
+                //@todo xxx p.Typ = hdKnx.GetType();
                 p.unit = "W";
                 p.EibAdress = hdKnx.destAdr.ToString();
                 list.list.Add(p);
@@ -96,8 +96,9 @@ namespace Knx
 
                     o.name =  i.name;
                     o.destAdr = new EIB_Adress(i.EibAdress);
+                    o.sourceAdr = new EIB_Adress(0, EIB_Adress_Typ.PhysAdr);
                     o.unit = i.unit;
-
+                    
                     hdKnxObjList.Add(o.destAdr, o);
                 }
 
@@ -155,8 +156,7 @@ namespace Knx
 
         public static void Load()
         {
-            EIB_Adress adr = new EIB_Adress(5,0,16);
-            hdKnxObjList.Add(adr, new EIS5("P Az",adr ));
+            HDKnxHandler.ReadParametersFromFile("KnxClient.xml");
         }
 
     }

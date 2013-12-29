@@ -50,9 +50,33 @@ namespace EIBDef
 
         public EIB_Adress(string EibAdrString)
         {
-            m_Adr = (ushort)0;
-            m_Typ = EIB_Adress_Typ.GroupAdr;
-            // @xxx muss noch gemacht werden
+            EIB_Adress adr = EIB_Adress.Parse(EibAdrString);
+            m_Adr = adr.m_Adr;
+            m_Typ = adr.m_Typ;
+        }
+
+        public static EIB_Adress Parse(string EibAdrString)
+        {
+            Exception ex = new EndOfStreamException("Falsches Format der EIB-Adresse");
+            EIB_Adress e = null;
+            char[] delimiterChars = { '/','.' };
+
+            String[] parts = EibAdrString.Split(delimiterChars);
+            if (parts.Length != 3) throw ex;
+            ushort a = ushort.Parse(parts[0]);
+            ushort b = ushort.Parse(parts[1]);
+            ushort c = ushort.Parse(parts[2]);
+
+            if (EibAdrString.Contains("/"))
+            {   // Gruppenadr
+                e = new EIB_Adress(a, b, c);
+            }
+            else if (EibAdrString.Contains("."))
+            {   // Physik. Adr
+                e = new EIB_Adress(0, EIB_Adress_Typ.PhysAdr);
+                e.Set_PA(a, b, c);
+            }
+            return e;
         }
 
 

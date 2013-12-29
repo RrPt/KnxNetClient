@@ -567,110 +567,118 @@ namespace Knx
             Byte[] receiveBytes =  udpClient.EndReceive(ar, ref e);
             Anz++;
             Console.WriteLine("Telegr[" + Anz + "]=" + KnxTools.BytesToString(receiveBytes));
+            try
+            {
 
-            // prüfen ob es ein ControlTelegramm ist
-            if (receiveBytes[2] == 0x02)
-            {   // es ist ein Controlltelegramm
-                switch (receiveBytes[3])
-                {
-                    case 0x01:  // Search Request
-                        Console.WriteLine("Search Request from Gateway");
-                        Log("<S:" + KnxTools.BytesToString(receiveBytes));
-                        break;
-                    case 0x02:  // Search Response
-                        _channelId = receiveBytes[6];
-                        Console.WriteLine("Search Response from Gateway");
-                        Log("<s:" + KnxTools.BytesToString(receiveBytes));
-                        break;
-                    case 0x03:  // Description Request
-                        Console.WriteLine("Description Request from Gateway");
-                        Log("<D:" + KnxTools.BytesToString(receiveBytes));
-                        break;
-                    case 0x04:  // Description Response
-                        _channelId = receiveBytes[6];
-                        Console.WriteLine("Description Response from Gateway");
-                        Log("<d:" + KnxTools.BytesToString(receiveBytes));
-                        break;
-                    case 0x05:  // Connect Request
-                        Console.WriteLine("Connection Request from Gateway");
-                        Log("<O:" + KnxTools.BytesToString(receiveBytes));
-                        break;
-                    case 0x06:  // Connect Response
-                        _channelId = receiveBytes[6];
-                        Console.WriteLine("ChannelId = " + _channelId);
-                        Log("<o:" + KnxTools.BytesToString(receiveBytes));
-                        if (receiveBytes[7] == 0) ConnectionState = KnxConnectionState.connected;
-                        break;
-                    case 0x07:  // Heartbeat Request
-                        Console.WriteLine("HeartbeatRequest for ChannelId = " + _channelId);
-                        Log("<H:" + KnxTools.BytesToString(receiveBytes));
-                        break;
-                    case 0x08:  // Heartbeat Response
-                        Console.WriteLine("HeartbeatResponse from ChannelId = " + _channelId);
-                        Log("<h:" + KnxTools.BytesToString(receiveBytes));
-                        if (receiveBytes[7] == 0) ConnectionState = KnxConnectionState.connected;
-                        break;
-                    case 0x09:  // Disconnect Request
-                        Console.WriteLine("DisconnectRequest for ChannelId = " + _channelId);
-                        Log("<C:" + KnxTools.BytesToString(receiveBytes));
-                        break;
-                    case 0x0A:  // Disconnect Response
-                        Console.WriteLine("Disconnected ChannelId = " + _channelId);
-                        Log("<c:" + KnxTools.BytesToString(receiveBytes));
-                        if (receiveBytes[7]==0) ConnectionState = KnxConnectionState.disconnected;
-                        break;
-                    default:
-                        Log("<?:" + KnxTools.BytesToString(receiveBytes));
-                        break;
-                }
-
-            }
-            else if (receiveBytes[2] == 0x04)
-            {   // es ist kein Controlltelegramm
-                if (receiveBytes[3] == 0x20)
-                {   // es ist ein Datentelegramm
-                    // erst ein Ack senden
-                    DataAck(receiveBytes[8]);
-                    // Header entfernen
-                    int idx = 0x0A;
-                    int len = receiveBytes.Length - idx;
-
-                    byte[] t = new byte[len];
-                    Array.Copy(receiveBytes, idx, t, 0, len);
-                    // und cemi Telegramm daraus erzeugen
-                    cEMI emi = new cEMI(t);
-                    Log(emi.ToString());
-                    // Suchen des passenden HDKnx Objektes
-                    HDKnx hdKnx = HDKnxHandler.GetObject(emi);
-                    // und dort den Wert setzen, falls erforderlich
-                    hdKnx.SetValue(emi);
-
-                    // geänderte Daten melden falls gewünscht
-                    if (dataChanged != null)
+                // prüfen ob es ein ControlTelegramm ist
+                if (receiveBytes[2] == 0x02)
+                {   // es ist ein Controlltelegramm
+                    switch (receiveBytes[3])
                     {
-                        DataCangedWeiterleiten(hdKnx);
+                        case 0x01:  // Search Request
+                            Console.WriteLine("Search Request from Gateway");
+                            Log("<S:" + KnxTools.BytesToString(receiveBytes));
+                            break;
+                        case 0x02:  // Search Response
+                            _channelId = receiveBytes[6];
+                            Console.WriteLine("Search Response from Gateway");
+                            Log("<s:" + KnxTools.BytesToString(receiveBytes));
+                            break;
+                        case 0x03:  // Description Request
+                            Console.WriteLine("Description Request from Gateway");
+                            Log("<D:" + KnxTools.BytesToString(receiveBytes));
+                            break;
+                        case 0x04:  // Description Response
+                            _channelId = receiveBytes[6];
+                            Console.WriteLine("Description Response from Gateway");
+                            Log("<d:" + KnxTools.BytesToString(receiveBytes));
+                            break;
+                        case 0x05:  // Connect Request
+                            Console.WriteLine("Connection Request from Gateway");
+                            Log("<O:" + KnxTools.BytesToString(receiveBytes));
+                            break;
+                        case 0x06:  // Connect Response
+                            _channelId = receiveBytes[6];
+                            Console.WriteLine("ChannelId = " + _channelId);
+                            Log("<o:" + KnxTools.BytesToString(receiveBytes));
+                            if (receiveBytes[7] == 0) ConnectionState = KnxConnectionState.connected;
+                            break;
+                        case 0x07:  // Heartbeat Request
+                            Console.WriteLine("HeartbeatRequest for ChannelId = " + _channelId);
+                            Log("<H:" + KnxTools.BytesToString(receiveBytes));
+                            break;
+                        case 0x08:  // Heartbeat Response
+                            Console.WriteLine("HeartbeatResponse from ChannelId = " + _channelId);
+                            Log("<h:" + KnxTools.BytesToString(receiveBytes));
+                            if (receiveBytes[7] == 0) ConnectionState = KnxConnectionState.connected;
+                            break;
+                        case 0x09:  // Disconnect Request
+                            Console.WriteLine("DisconnectRequest for ChannelId = " + _channelId);
+                            Log("<C:" + KnxTools.BytesToString(receiveBytes));
+                            break;
+                        case 0x0A:  // Disconnect Response
+                            Console.WriteLine("Disconnected ChannelId = " + _channelId);
+                            Log("<c:" + KnxTools.BytesToString(receiveBytes));
+                            if (receiveBytes[7] == 0) ConnectionState = KnxConnectionState.disconnected;
+                            break;
+                        default:
+                            Log("<?:" + KnxTools.BytesToString(receiveBytes));
+                            break;
                     }
 
-                    if (TelegramReceived != null)
-                    {   // Ein Delegate ist eingerichtet, dann diesen aufrufen
-                        TelegramWeiterleiten(emi);
-                    }
-                    if (QueueEnable)
-                    {   // in Queue speichern
-                        lock (fromKnxQueue)
+                }
+                else if (receiveBytes[2] == 0x04)
+                {   // es ist kein Controlltelegramm
+                    if (receiveBytes[3] == 0x20)
+                    {   // es ist ein Datentelegramm
+                        // erst ein Ack senden
+                        DataAck(receiveBytes[8]);
+                        // Header entfernen
+                        int idx = 0x0A;
+                        int len = receiveBytes.Length - idx;
+
+                        byte[] t = new byte[len];
+                        Array.Copy(receiveBytes, idx, t, 0, len);
+                        // und cemi Telegramm daraus erzeugen
+                        cEMI emi = new cEMI(t);
+                        Log(emi.ToString());
+                        // Suchen des passenden HDKnx Objektes
+                        HDKnx hdKnx = HDKnxHandler.GetObject(emi);
+                        // und dort den Wert setzen, falls erforderlich
+                        hdKnx.SetValue(emi);
+
+                        // geänderte Daten melden falls gewünscht
+                        if (dataChanged != null)
                         {
-                            fromKnxQueue.Enqueue(emi);
+                            DataCangedWeiterleiten(hdKnx);
                         }
+
+                        if (TelegramReceived != null)
+                        {   // Ein Delegate ist eingerichtet, dann diesen aufrufen
+                            TelegramWeiterleiten(emi);
+                        }
+                        if (QueueEnable)
+                        {   // in Queue speichern
+                            lock (fromKnxQueue)
+                            {
+                                fromKnxQueue.Enqueue(emi);
+                            }
+                        }
+
+
                     }
-
-
+                    else if (receiveBytes[3] == 0x21)
+                    {   // Bestätigung eines Datentelegramm
+                        Console.WriteLine("Daten bestätigt  status = " + receiveBytes[9]);
+                    }
                 }
-                else if (receiveBytes[3] == 0x21)
-                {   // Bestätigung eines Datentelegramm
-                    Console.WriteLine("Daten bestätigt  status = " + receiveBytes[9]);
-                }
+                ar = udpClient.BeginReceive(new AsyncCallback(ReceiveCallback), Anz);
             }
-            ar = udpClient.BeginReceive(new AsyncCallback(ReceiveCallback), Anz);
+            catch (Exception ex)
+            {
+
+                Console.WriteLine(ex.ToString());
+            }
         }
 
 
