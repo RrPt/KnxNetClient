@@ -22,21 +22,36 @@ namespace Knx
         {
             InitializeComponent();
             HDKnxHandler.Load();
-  //        KnxCon.SetLog(AddLogText);
-  //        KnxCon.SetReceivedFunction(NewTelegramReceived,this);
-            KnxCon.SetDataChangedFunction(DataChanged, this);
+            KnxCon.SetLog(AddLogText);
+            KnxCon.SetReceivedFunction(NewTelegramReceived);
+            KnxCon.SetDataChangedFunction(DataChanged);
 
         }
 
 
-        //private void NewTelegramReceived(cEMI emi)
-        //{
-        //    tBResponse.AppendText(Environment.NewLine + "    " +emi.ToString());
-        //}
+        private void NewTelegramReceived(cEMI emi)
+        {
+            if (InvokeRequired)
+            {
+                BeginInvoke(new KnxNetConnection.TelegramReceivedDelegate(NewTelegramReceived), new object[] { emi });
+            }
+            else
+            {
+                tBResponse.AppendText(Environment.NewLine + "    " + emi.ToString());
+            }
+            
+        }
 
         private void DataChanged(HDKnx hdKnx)
         {
-            tBResponse.AppendText(Environment.NewLine + hdKnx.ToString());
+            if (InvokeRequired)
+            {
+                BeginInvoke(new KnxNetConnection.DataChangedDelegate(DataChanged), new object[] { hdKnx });
+            }
+            else
+            {
+                tBResponse.AppendText(Environment.NewLine + hdKnx.ToString());
+            }
         }
 
 
@@ -63,17 +78,17 @@ namespace Knx
 
 
 
-        //public void AddLogText(String Text)
-        //{
-        //    if (InvokeRequired)
-        //    {
-        //        BeginInvoke(new StringParameterWithStatusDelegate(AddLogText), new object[] { Text });
-        //    }
-        //    else
-        //    {
-        //        tBResponse.AppendText(Environment.NewLine + "                          ---  " + Text);
-        //    }
-        //}
+        public void AddLogText(String Text)
+        {
+            if (InvokeRequired)
+            {
+                BeginInvoke(new StringParameterWithStatusDelegate(AddLogText), new object[] { Text });
+            }
+            else
+            {
+                tBResponse.AppendText(Environment.NewLine + "                          ---  " + Text);
+            }
+        }
 
         private void bt_Send_Click(object sender, EventArgs e)
         {
