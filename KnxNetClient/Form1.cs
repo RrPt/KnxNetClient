@@ -22,7 +22,6 @@ namespace Knx
         {
             InitializeComponent();
             HDKnxHandler.Load();
-            timer1.Start();
   //        KnxCon.SetLog(AddLogText);
   //        KnxCon.SetReceivedFunction(NewTelegramReceived,this);
             KnxCon.SetDataChangedFunction(DataChanged, this);
@@ -30,10 +29,10 @@ namespace Knx
         }
 
 
-        private void NewTelegramReceived(cEMI emi)
-        {
-            tBResponse.AppendText(Environment.NewLine + "    " +emi.ToString());
-        }
+        //private void NewTelegramReceived(cEMI emi)
+        //{
+        //    tBResponse.AppendText(Environment.NewLine + "    " +emi.ToString());
+        //}
 
         private void DataChanged(HDKnx hdKnx)
         {
@@ -42,12 +41,6 @@ namespace Knx
 
 
 
-        private void GetData()
-        {
-            cEMI emi = KnxCon.GetData();
-            if (emi != null) tBResponse.AppendText(Environment.NewLine + emi.ToString()); // KnxTools.BytesToString(tele));
-            else tBResponse.AppendText(Environment.NewLine + "no Telegramm");
-        }
 
 
         // GUI
@@ -68,47 +61,19 @@ namespace Knx
             else tBResponse.AppendText(Environment.NewLine + "Gateway disconnected");
         }
 
-        private void button3_Click(object sender, EventArgs e)
-        {
-            GetData();
-        }
 
 
-        private void btn_Heartbeat_Click(object sender, EventArgs e)
-        {
-            KnxCon.Heartbeat();
-        }
-
-
-        public void AddLogText(String Text)
-        {
-            if (InvokeRequired)
-            {
-                BeginInvoke(new StringParameterWithStatusDelegate(AddLogText), new object[] { Text });
-            }
-            else
-            {
-                tBResponse.AppendText(Environment.NewLine + "                          ---  " + Text);
-            }
-        }
-
-        private void timer1_Tick(object sender, EventArgs e)
-        {
-           cEMI emi = KnxCon.GetData();
-            while (emi != null)
-            {
-                //if (tele[2] == 0x02)
-                //{   // Controltelegramm
-                //    tBResponse.AppendText(Environment.NewLine + "<C:" + KnxTools.BytesToString(tele));
-                //}
-                //else
-                {   // Tunneltelegramm
-                    tBResponse.AppendText( Environment.NewLine + "Data:" + emi.ToString()); // KnxTools.BytesToString(tele));
-                }
-
-                emi = KnxCon.GetData();
-            }
-        }
+        //public void AddLogText(String Text)
+        //{
+        //    if (InvokeRequired)
+        //    {
+        //        BeginInvoke(new StringParameterWithStatusDelegate(AddLogText), new object[] { Text });
+        //    }
+        //    else
+        //    {
+        //        tBResponse.AppendText(Environment.NewLine + "                          ---  " + Text);
+        //    }
+        //}
 
         private void bt_Send_Click(object sender, EventArgs e)
         {

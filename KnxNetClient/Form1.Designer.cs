@@ -28,13 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.tBResponse = new System.Windows.Forms.TextBox();
-            this.button3 = new System.Windows.Forms.Button();
-            this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.btn_Heartbeat = new System.Windows.Forms.Button();
             this.bt_Send = new System.Windows.Forms.Button();
             this.btn_Send0 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
@@ -73,31 +69,6 @@
             this.tBResponse.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.tBResponse.Size = new System.Drawing.Size(688, 285);
             this.tBResponse.TabIndex = 2;
-            // 
-            // button3
-            // 
-            this.button3.Location = new System.Drawing.Point(130, 22);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(75, 23);
-            this.button3.TabIndex = 3;
-            this.button3.Text = "Get";
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.button3_Click);
-            // 
-            // timer1
-            // 
-            this.timer1.Interval = 1000;
-            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
-            // 
-            // btn_Heartbeat
-            // 
-            this.btn_Heartbeat.Location = new System.Drawing.Point(237, 22);
-            this.btn_Heartbeat.Name = "btn_Heartbeat";
-            this.btn_Heartbeat.Size = new System.Drawing.Size(75, 23);
-            this.btn_Heartbeat.TabIndex = 4;
-            this.btn_Heartbeat.Text = "Heartbeat";
-            this.btn_Heartbeat.UseVisualStyleBackColor = true;
-            this.btn_Heartbeat.Click += new System.EventHandler(this.btn_Heartbeat_Click);
             // 
             // bt_Send
             // 
@@ -148,8 +119,6 @@
             this.Controls.Add(this.button4);
             this.Controls.Add(this.btn_Send0);
             this.Controls.Add(this.bt_Send);
-            this.Controls.Add(this.btn_Heartbeat);
-            this.Controls.Add(this.button3);
             this.Controls.Add(this.tBResponse);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
@@ -165,9 +134,6 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.TextBox tBResponse;
-        private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.Timer timer1;
-        private System.Windows.Forms.Button btn_Heartbeat;
         private System.Windows.Forms.Button bt_Send;
         private System.Windows.Forms.Button btn_Send0;
         private System.Windows.Forms.Button button4;
