@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using System.Net.Sockets;
 using System.Net;
 using EIBDef;
+using HomeData;
 
 namespace Knx
 {
@@ -92,14 +93,14 @@ namespace Knx
 
         private void bt_Send_Click(object sender, EventArgs e)
         {
-            cEMI emi = new cEMI(new EIB_Adress(64), 11.1f);
+            cEMI emi = new cEMI(new EIB_Adress(2), false);
             KnxCon.Send(emi);
         }
 
         private void btn_Send0_Click(object sender, EventArgs e)
         {
-            cEMI emi = new cEMI(new EIB_Adress(64), true);
-            emi.APCI = APCI_Typ.Request;
+            cEMI emi = new cEMI(new EIB_Adress(2), true);
+            //emi.APCI = APCI_Typ.Request;
             KnxCon.Send(emi);
         }
 
