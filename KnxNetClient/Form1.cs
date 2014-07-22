@@ -9,6 +9,7 @@ using System.Net.Sockets;
 using System.Net;
 using EIBDef;
 using HomeData;
+using System.IO;
 
 namespace Knx
 {
@@ -23,9 +24,10 @@ namespace Knx
         {
             InitializeComponent();
             HDKnxHandler.Load();
-            KnxCon.SetLog(AddLogText);
+            //KnxCon.SetLog(AddLogText);
             KnxCon.SetReceivedFunction(NewTelegramReceived);
-            KnxCon.SetDataChangedFunction(DataChanged);
+            //KnxCon.SetDataChangedFunction(DataChanged);
+            KnxCon.SetRawReceivedFunction(NewRawTelegramReceived);
 
         }
 
@@ -38,9 +40,27 @@ namespace Knx
             }
             else
             {
-                tBResponse.AppendText(Environment.NewLine + "    " + emi.ToString());
+                tBResponse.AppendText(Environment.NewLine + emi.ToString() );
             }
             
+        }
+
+
+        private void NewRawTelegramReceived(byte[] raw)
+        {
+            if (InvokeRequired)
+            {
+                BeginInvoke(new KnxNetConnection.RawTelegramReceivedDelegate(NewRawTelegramReceived), new object[] { raw });
+            }
+            else
+            {
+                byte[] t = new byte[raw.Length-2];
+                Array.Copy(raw, 0, t, 0, raw.Length - 2);
+                //tBResponse.AppendText(Environment.NewLine + "raw-->   " +  HomeData.KnxTools.BytesToString(t)   );
+                String line =HomeData.KnxTools.BytesToTrxString(t) + Environment.NewLine;
+                System.IO.File.AppendAllText("t.trx",line);
+            }
+
         }
 
         private void DataChanged(HDKnx hdKnx)
@@ -51,7 +71,7 @@ namespace Knx
             }
             else
             {
-                tBResponse.AppendText(Environment.NewLine + hdKnx.ToString());
+                tBResponse.AppendText(Environment.NewLine + "DC-->   " + hdKnx.ToString());
             }
         }
 
@@ -87,7 +107,7 @@ namespace Knx
             }
             else
             {
-                tBResponse.AppendText(Environment.NewLine + "                          ---  " + Text);
+                tBResponse.AppendText(Environment.NewLine + "LOG:      ---  " + Text);
             }
         }
 
