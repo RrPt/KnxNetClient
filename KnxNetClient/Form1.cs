@@ -18,16 +18,44 @@ namespace Knx
         KnxNetConnection KnxCon = new KnxNetConnection();
         //static public System.Windows.Forms.TextBox tb_Log;
         delegate void StringParameterWithStatusDelegate(string Text);
+        String Filename = "KNXLog.trx";
 
 
         public KnxNetForm()
         {
             InitializeComponent();
+            Filename = calculateInitialFilename();
             HDKnxHandler.Load();
             //KnxCon.SetLog(AddLogText);
             KnxCon.SetReceivedFunction(NewTelegramReceived);
             //KnxCon.SetDataChangedFunction(DataChanged);
             KnxCon.SetRawReceivedFunction(NewRawTelegramReceived);
+            SetDefaultGateway();
+        }
+
+        private string calculateInitialFilename()
+        {
+            DateTime now = DateTime.Now;
+            String fn = "KnxLog_" + now.ToString("yyyyMMdd_HHmmss") + ".trx";
+                return fn;
+        }
+
+
+        private void SetDefaultGateway()
+        {
+            IPHostEntry ipEntry = Dns.GetHostEntry(Dns.GetHostName());
+            IPAddress[] addr = ipEntry.AddressList;
+
+            for (int i = 0; i < addr.Length; i++)
+            {
+                if (addr[i].AddressFamily == AddressFamily.InterNetwork)
+                {
+                    String IP = addr[i].ToString();
+                    if (IP.StartsWith("192.168.254.")) cBGatewayIP.SelectedIndex = 1;
+                    if (IP.StartsWith("10.")) cBGatewayIP.SelectedIndex = 1;
+                    if (IP.StartsWith("192.168.0.")) cBGatewayIP.SelectedIndex = 0;
+                }
+            }
 
         }
 
@@ -54,11 +82,10 @@ namespace Knx
             }
             else
             {
-                byte[] t = new byte[raw.Length-2];
-                Array.Copy(raw, 0, t, 0, raw.Length - 2);
-                //tBResponse.AppendText(Environment.NewLine + "raw-->   " +  HomeData.KnxTools.BytesToString(t)   );
-                String line =HomeData.KnxTools.BytesToTrxString(t) + Environment.NewLine;
-                System.IO.File.AppendAllText("t.trx",line);
+                //byte[] t = new byte[raw.Length];
+                //Array.Copy(raw, 0, t, 0, raw.Length);
+                String line =HomeData.KnxTools.BytesToTrxString(raw) + Environment.NewLine;
+                System.IO.File.AppendAllText(Filename,line);
             }
 
         }
@@ -83,7 +110,7 @@ namespace Knx
 
         private void Open_Click(object sender, EventArgs e)
         {
-            String GatewayIp = "192.168.0.3";
+            String GatewayIp = (String) cBGatewayIP.SelectedItem;
             bool ok = KnxCon.Open(GatewayIp);
             if (!ok) tBResponse.AppendText(Environment.NewLine + "Konnte keine Verbindung zum Gateway " + GatewayIp + " herstellen");
             else tBResponse.AppendText(Environment.NewLine + "Connected mit Gateway " + GatewayIp + "  ChannelId=" + KnxCon.channelId  );
@@ -111,25 +138,25 @@ namespace Knx
             }
         }
 
-        private void bt_Send_Click(object sender, EventArgs e)
+        private void bt_SendAn_Click(object sender, EventArgs e)
         {
-            cEMI emi = new cEMI(new EIB_Adress(2), false);
+            cEMI emi = new cEMI(new EIB_Adress("0/1/56"), false);
             KnxCon.Send(emi);
         }
 
-        private void btn_Send0_Click(object sender, EventArgs e)
+        private void btn_SendAus_Click(object sender, EventArgs e)
         {
-            cEMI emi = new cEMI(new EIB_Adress(2), true);
+            cEMI emi = new cEMI(new EIB_Adress("0/1/56"), true);
             //emi.APCI = APCI_Typ.Request;
             KnxCon.Send(emi);
         }
 
-        private void button4_Click(object sender, EventArgs e)
+        private void button_WriteXML_Click(object sender, EventArgs e)
         {
             HDKnxHandler.WriteParametersToFile("KnxClientW.xml");
         }
 
-        private void button5_Click(object sender, EventArgs e)
+        private void button_ReadXML_Click(object sender, EventArgs e)
         {
             HDKnxHandler.ReadParametersFromFile("KnxClient.xml");
         }
