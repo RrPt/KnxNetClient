@@ -19,7 +19,8 @@ namespace Knx
         //static public System.Windows.Forms.TextBox tb_Log;
         delegate void StringParameterWithStatusDelegate(string Text);
         String Filename = "KNXLog.trx";
-
+        const int msPerDay = 86400000;
+        const int maxAnzLines=200;
 
         public KnxNetForm()
         {
@@ -31,6 +32,8 @@ namespace Knx
             //KnxCon.SetDataChangedFunction(DataChanged);
             KnxCon.SetRawReceivedFunction(NewRawTelegramReceived);
             SetDefaultGateway();
+            timerFileName.Interval = msPerDay - (int)DateTime.Now.TimeOfDay.TotalMilliseconds;
+            timerFileName.Start();
         }
 
         private string calculateInitialFilename()
@@ -68,7 +71,7 @@ namespace Knx
             }
             else
             {
-                tBResponse.AppendText(Environment.NewLine + emi.ToString() );
+                AddToTextbox(Environment.NewLine + emi.ToString());
             }
             
         }
@@ -98,8 +101,22 @@ namespace Knx
             }
             else
             {
-                tBResponse.AppendText(Environment.NewLine + "DC-->   " + hdKnx.ToString());
+                AddToTextbox(Environment.NewLine + "DC-->   " + hdKnx.ToString());
             }
+        }
+
+
+        private void AddToTextbox(String txt)
+        {
+            if (tBResponse.Lines.Length > maxAnzLines)
+            {
+                int selectionstart = tBResponse.SelectionStart;
+                int firstlinelength = tBResponse.Lines[0].Length;
+                tBResponse.Text = tBResponse.Text.Remove(0, firstlinelength + 2);
+                tBResponse.SelectionStart = selectionstart - firstlinelength;
+            }
+            tBResponse.AppendText(txt);
+
         }
 
 
@@ -112,16 +129,16 @@ namespace Knx
         {
             String GatewayIp = (String) cBGatewayIP.SelectedItem;
             bool ok = KnxCon.Open(GatewayIp);
-            if (!ok) tBResponse.AppendText(Environment.NewLine + "Konnte keine Verbindung zum Gateway " + GatewayIp + " herstellen");
-            else tBResponse.AppendText(Environment.NewLine + "Connected mit Gateway " + GatewayIp + "  ChannelId=" + KnxCon.channelId  );
+            if (!ok) AddToTextbox(Environment.NewLine + "Konnte keine Verbindung zum Gateway " + GatewayIp + " herstellen");
+            else AddToTextbox(Environment.NewLine + "Connected mit Gateway " + GatewayIp + "  ChannelId=" + KnxCon.channelId);
 
         }
 
         private void Close_Click(object sender, EventArgs e)
         {
             bool ok = KnxCon.Close();
-            if (!ok) tBResponse.AppendText(Environment.NewLine + "Verbindung zum Gateway konnte nicht getrennt werden ");
-            else tBResponse.AppendText(Environment.NewLine + "Gateway disconnected");
+            if (!ok) AddToTextbox(Environment.NewLine + "Verbindung zum Gateway konnte nicht getrennt werden ");
+            else AddToTextbox(Environment.NewLine + "Gateway disconnected");
         }
 
 
@@ -134,7 +151,7 @@ namespace Knx
             }
             else
             {
-                tBResponse.AppendText(Environment.NewLine + "LOG:      ---  " + Text);
+                AddToTextbox(Environment.NewLine + "LOG:      ---  " + Text);
             }
         }
 
@@ -159,6 +176,16 @@ namespace Knx
         private void button_ReadXML_Click(object sender, EventArgs e)
         {
             HDKnxHandler.ReadParametersFromFile("KnxClient.xml");
+        }
+
+        private void timerFileName_Tick(object sender, EventArgs e)
+        {
+            Filename = calculateInitialFilename();
+
+            AddToTextbox(Environment.NewLine + "Neuer Filename = " + Filename);
+
+            timerFileName.Interval = msPerDay;
+
         }
 
     }

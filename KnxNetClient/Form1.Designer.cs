@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.tBResponse = new System.Windows.Forms.TextBox();
@@ -36,6 +37,7 @@
             this.button4 = new System.Windows.Forms.Button();
             this.button5 = new System.Windows.Forms.Button();
             this.cBGatewayIP = new System.Windows.Forms.ComboBox();
+            this.timerFileName = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
             // 
             // button1
@@ -127,6 +129,11 @@
             this.cBGatewayIP.Size = new System.Drawing.Size(156, 21);
             this.cBGatewayIP.TabIndex = 9;
             // 
+            // timerFileName
+            // 
+            this.timerFileName.Interval = 60000;
+            this.timerFileName.Tick += new System.EventHandler(this.timerFileName_Tick);
+            // 
             // KnxNetForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -157,6 +164,7 @@
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.ComboBox cBGatewayIP;
+        private System.Windows.Forms.Timer timerFileName;
     }
 }
 
