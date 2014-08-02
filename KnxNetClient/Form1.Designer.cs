@@ -123,7 +123,7 @@
             this.cBGatewayIP.FormattingEnabled = true;
             this.cBGatewayIP.Items.AddRange(new object[] {
             "192.168.0.3",
-            "10.70.30.55"});
+            "10.70.30.56"});
             this.cBGatewayIP.Location = new System.Drawing.Point(24, 12);
             this.cBGatewayIP.Name = "cBGatewayIP";
             this.cBGatewayIP.Size = new System.Drawing.Size(156, 21);

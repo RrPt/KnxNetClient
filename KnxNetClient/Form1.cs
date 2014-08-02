@@ -19,16 +19,19 @@ namespace Knx
         //static public System.Windows.Forms.TextBox tb_Log;
         delegate void StringParameterWithStatusDelegate(string Text);
         String Filename = "KNXLog.trx";
+        String logFilename = "KNXNetClientLog.txt";
         const int msPerDay = 86400000;
         const int maxAnzLines=200;
 
         public KnxNetForm()
         {
             InitializeComponent();
+            logFilename = "KNXNetClientLog_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".txt";
             Filename = calculateInitialFilename();
             HDKnxHandler.Load();
-            //KnxCon.SetLog(AddLogText);
+            KnxCon.SetLog(AddLogText);
             KnxCon.SetReceivedFunction(NewTelegramReceived);
+            KnxCon.SetInfo(NewInfoReceived);
             //KnxCon.SetDataChangedFunction(DataChanged);
             KnxCon.SetRawReceivedFunction(NewRawTelegramReceived);
             SetDefaultGateway();
@@ -40,7 +43,7 @@ namespace Knx
         {
             DateTime now = DateTime.Now;
             String fn = "KnxLog_" + now.ToString("yyyyMMdd_HHmmss") + ".trx";
-                return fn;
+            return fn;
         }
 
 
@@ -73,7 +76,6 @@ namespace Knx
             {
                 AddToTextbox(Environment.NewLine + emi.ToString());
             }
-            
         }
 
 
@@ -92,6 +94,21 @@ namespace Knx
             }
 
         }
+
+
+        private void NewInfoReceived(String txt)
+        {
+            if (InvokeRequired)
+            {
+                BeginInvoke(new KnxNetConnection.SendInfoDelegate(NewInfoReceived), new object[] { txt });
+            }
+            else
+            {
+                AddToTextbox(Environment.NewLine + txt);
+            }
+        }
+
+
 
         private void DataChanged(HDKnx hdKnx)
         {
@@ -145,6 +162,26 @@ namespace Knx
 
         public void AddLogText(String Text)
         {
+            // Schreibe in Textbox
+            //if (InvokeRequired)
+            //{
+            //    BeginInvoke(new StringParameterWithStatusDelegate(AddLogText), new object[] { Text });
+            //}
+            //else
+            //{
+            //    AddToTextbox(Environment.NewLine + "LOG:      ---  " + Text);
+            //}
+
+            // schreibe in Logfile
+            System.IO.File.AppendAllText(logFilename, Environment.NewLine + DateTime.Now.ToString("dd.MM.yy HH:mm:ss") + ": " + Text);
+        }
+
+
+
+
+        public void AddInfoText(String Text)
+        {
+            // Schreibe in Textbox
             if (InvokeRequired)
             {
                 BeginInvoke(new StringParameterWithStatusDelegate(AddLogText), new object[] { Text });
@@ -154,6 +191,8 @@ namespace Knx
                 AddToTextbox(Environment.NewLine + "LOG:      ---  " + Text);
             }
         }
+
+
 
         private void bt_SendAn_Click(object sender, EventArgs e)
         {
