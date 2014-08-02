@@ -130,7 +130,7 @@ namespace Knx
                 int selectionstart = tBResponse.SelectionStart;
                 int firstlinelength = tBResponse.Lines[0].Length;
                 tBResponse.Text = tBResponse.Text.Remove(0, firstlinelength + 2);
-                tBResponse.SelectionStart = selectionstart - firstlinelength;
+                if (selectionstart - firstlinelength > 0) tBResponse.SelectionStart = selectionstart - firstlinelength;
             }
             tBResponse.AppendText(txt);
 
