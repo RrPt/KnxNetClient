@@ -15,6 +15,7 @@ namespace Knx
 {
     public partial class KnxNetForm : Form
     {
+        private static object threadlock = new object(); 
         KnxNetConnection KnxCon = new KnxNetConnection();
         //static public System.Windows.Forms.TextBox tb_Log;
         delegate void StringParameterWithStatusDelegate(string Text);
@@ -173,7 +174,10 @@ namespace Knx
             //}
 
             // schreibe in Logfile
-            System.IO.File.AppendAllText(logFilename, Environment.NewLine + DateTime.Now.ToString("dd.MM.yy HH:mm:ss") + ": " + Text);
+            lock (threadlock)
+            {
+                System.IO.File.AppendAllText(logFilename, Environment.NewLine + DateTime.Now.ToString("dd.MM.yy HH:mm:ss") + ": " + Text);
+            }
         }
 
 
