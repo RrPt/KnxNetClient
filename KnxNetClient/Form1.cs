@@ -229,6 +229,34 @@ namespace Knx
             KnxCon.Send(emi);
         }
 
+
+        // Rollos
+        private void bt_RolloAb_Click(object sender, EventArgs e)
+        {
+            cEMI emi = new cEMI(new EIB_Adress("1/1/0"), true);
+            KnxCon.Send(emi);
+        }
+
+        private void btn_RolloAuf_Click(object sender, EventArgs e)
+        {
+            cEMI emi = new cEMI(new EIB_Adress("1/1/0"), false);
+            KnxCon.Send(emi);
+        }
+
+        private void bt_LamelleAb_Click(object sender, EventArgs e)
+        {
+            cEMI emi = new cEMI(new EIB_Adress("1/1/1"), true);
+            KnxCon.Send(emi);
+        }
+
+        private void btn_LamelleAuf_Click(object sender, EventArgs e)
+        {
+            cEMI emi = new cEMI(new EIB_Adress("1/1/1"), false);
+            KnxCon.Send(emi);
+        }
+
+
+
         private void button_WriteXML_Click(object sender, EventArgs e)
         {
             HDKnxHandler.WriteParametersToFile("KnxClientW.xml");

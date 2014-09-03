@@ -41,6 +41,10 @@
             this.button8 = new System.Windows.Forms.Button();
             this.button9 = new System.Windows.Forms.Button();
             this.button6 = new System.Windows.Forms.Button();
+            this.button10 = new System.Windows.Forms.Button();
+            this.button11 = new System.Windows.Forms.Button();
+            this.button12 = new System.Windows.Forms.Button();
+            this.button13 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // button1
@@ -70,11 +74,11 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tBResponse.Font = new System.Drawing.Font("Courier New", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tBResponse.Location = new System.Drawing.Point(23, 51);
+            this.tBResponse.Location = new System.Drawing.Point(23, 90);
             this.tBResponse.Multiline = true;
             this.tBResponse.Name = "tBResponse";
             this.tBResponse.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.tBResponse.Size = new System.Drawing.Size(1046, 306);
+            this.tBResponse.Size = new System.Drawing.Size(1046, 449);
             this.tBResponse.TabIndex = 2;
             // 
             // button4
@@ -170,11 +174,59 @@
             this.button6.UseVisualStyleBackColor = true;
             this.button6.Click += new System.EventHandler(this.btn_SendDimStop_Click);
             // 
+            // button10
+            // 
+            this.button10.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.button10.Location = new System.Drawing.Point(782, 51);
+            this.button10.Name = "button10";
+            this.button10.Size = new System.Drawing.Size(83, 35);
+            this.button10.TabIndex = 15;
+            this.button10.Text = "Lamelle RrPt Ab";
+            this.button10.UseVisualStyleBackColor = true;
+            this.button10.Click += new System.EventHandler(this.bt_LamelleAb_Click);
+            // 
+            // button11
+            // 
+            this.button11.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.button11.Location = new System.Drawing.Point(693, 49);
+            this.button11.Name = "button11";
+            this.button11.Size = new System.Drawing.Size(83, 35);
+            this.button11.TabIndex = 14;
+            this.button11.Text = "Rollo RrPt auf";
+            this.button11.UseVisualStyleBackColor = true;
+            this.button11.Click += new System.EventHandler(this.btn_RolloAuf_Click);
+            // 
+            // button12
+            // 
+            this.button12.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.button12.Location = new System.Drawing.Point(590, 49);
+            this.button12.Name = "button12";
+            this.button12.Size = new System.Drawing.Size(87, 35);
+            this.button12.TabIndex = 13;
+            this.button12.Text = "Rollo RrPt ab";
+            this.button12.UseVisualStyleBackColor = true;
+            this.button12.Click += new System.EventHandler(this.bt_RolloAb_Click);
+            // 
+            // button13
+            // 
+            this.button13.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.button13.Location = new System.Drawing.Point(871, 49);
+            this.button13.Name = "button13";
+            this.button13.Size = new System.Drawing.Size(83, 35);
+            this.button13.TabIndex = 16;
+            this.button13.Text = "Lamelle RrPt Auf";
+            this.button13.UseVisualStyleBackColor = true;
+            this.button13.Click += new System.EventHandler(this.btn_LamelleAuf_Click);
+            // 
             // KnxNetForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1095, 369);
+            this.ClientSize = new System.Drawing.Size(1095, 551);
+            this.Controls.Add(this.button13);
+            this.Controls.Add(this.button10);
+            this.Controls.Add(this.button11);
+            this.Controls.Add(this.button12);
             this.Controls.Add(this.button6);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.button9);
@@ -207,6 +259,10 @@
         private System.Windows.Forms.Button button8;
         private System.Windows.Forms.Button button9;
         private System.Windows.Forms.Button button6;
+        private System.Windows.Forms.Button button10;
+        private System.Windows.Forms.Button button11;
+        private System.Windows.Forms.Button button12;
+        private System.Windows.Forms.Button button13;
     }
 }
 
