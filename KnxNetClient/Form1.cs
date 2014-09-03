@@ -200,14 +200,32 @@ namespace Knx
 
         private void bt_SendAn_Click(object sender, EventArgs e)
         {
-            cEMI emi = new cEMI(new EIB_Adress("1/0/56"), false);
+            cEMI emi = new cEMI(new EIB_Adress("1/0/56"), true);
             KnxCon.Send(emi);
         }
 
         private void btn_SendAus_Click(object sender, EventArgs e)
         {
-            cEMI emi = new cEMI(new EIB_Adress("1/0/56"), true);
-            //emi.APCI = APCI_Typ.Request;
+            cEMI emi = new cEMI(new EIB_Adress("1/0/56"), false);
+            KnxCon.Send(emi);
+        }
+
+
+        private void bt_SendDimDunkler_Click(object sender, EventArgs e)
+        {
+            cEMI emi = new cEMI(new EIB_Adress("1/0/57"), (byte)1);
+            KnxCon.Send(emi);
+        }
+
+        private void btn_SendDimHeller_Click(object sender, EventArgs e)
+        {
+            cEMI emi = new cEMI(new EIB_Adress("1/0/57"), (byte)9);
+            KnxCon.Send(emi);
+        }
+
+        private void btn_SendDimStop_Click(object sender, EventArgs e)
+        {
+            cEMI emi = new cEMI(new EIB_Adress("1/0/57"), (byte)0);
             KnxCon.Send(emi);
         }
 
