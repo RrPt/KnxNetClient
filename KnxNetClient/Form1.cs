@@ -277,5 +277,10 @@ namespace Knx
 
         }
 
+        private void tBHBIntervall_TextChanged(object sender, EventArgs e)
+        {
+            KnxCon.HeartbeatInterval = int.Parse(tBHBIntervall.Text);
+        }
+
     }
 }
