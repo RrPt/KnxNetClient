@@ -21,6 +21,7 @@ namespace Knx
         delegate void StringParameterWithStatusDelegate(string Text);
         String Filename = "KNXLog.trx";
         String logFilename = "KNXNetClientLog.txt";
+        String debugFilename = "KNXNetClientDebug.txt";
         const int msPerDay = 86400000;
         const int maxAnzLines=200;
 
@@ -28,9 +29,11 @@ namespace Knx
         {
             InitializeComponent();
             logFilename = "KNXNetClientLog_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".txt";
+            debugFilename = "KNXNetClientDebug_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".txt";
             Filename = calculateInitialFilename();
             HDKnxHandler.Load();
             KnxCon.SetLog(AddLogText);
+            KnxCon.SetDebugTo(AddDebugText);
             KnxCon.SetReceivedFunction(NewTelegramReceived);
             KnxCon.SetInfo(NewInfoReceived);
             //KnxCon.SetDataChangedFunction(DataChanged);
@@ -180,6 +183,25 @@ namespace Knx
             }
         }
 
+
+        public void AddDebugText(String Text)
+        {
+            // Schreibe in Textbox
+            //if (InvokeRequired)
+            //{
+            //    BeginInvoke(new StringParameterWithStatusDelegate(AddLogText), new object[] { Text });
+            //}
+            //else
+            //{
+            //    AddToTextbox(Environment.NewLine + "LOG:      ---  " + Text);
+            //}
+
+            // schreibe in Logfile
+            lock (threadlock)
+            {
+                System.IO.File.AppendAllText(debugFilename, Environment.NewLine + DateTime.Now.ToString("dd.MM.yy HH:mm:ss") + ": " + Text);
+            }
+        }
 
 
 
