@@ -36,8 +36,9 @@ namespace Knx
             KnxCon.SetDebugTo(AddDebugText);
             KnxCon.SetReceivedFunction(NewTelegramReceived);
             KnxCon.SetInfo(NewInfoReceived);
-            //KnxCon.SetDataChangedFunction(DataChanged);
+            KnxCon.SetDataChangedFunction(DataChanged);
             KnxCon.SetRawReceivedFunction(NewRawTelegramReceived);
+            tBHBIntervall_TextChanged(null, null);
             SetDefaultGateway();
             timerFileName.Interval = msPerDay - (int)DateTime.Now.TimeOfDay.TotalMilliseconds;
             timerFileName.Start();
@@ -122,7 +123,22 @@ namespace Knx
             }
             else
             {
-                AddToTextbox(Environment.NewLine + "DC-->   " + hdKnx.ToString());
+                try
+                {
+                    if (hdKnx.emi != null)
+                    {
+                        AddToTextbox(Environment.NewLine + hdKnx.ToString() + "  emi=" + hdKnx.emi.ToString());
+                    }
+                    else
+                    {
+                        AddToTextbox(Environment.NewLine + hdKnx.ToString() );
+                    }
+                }
+                catch (Exception e)
+                {
+                    
+                    AddToTextbox(e.ToString());
+                }
             }
         }
 
@@ -304,5 +320,9 @@ namespace Knx
             KnxCon.HeartbeatInterval = int.Parse(tBHBIntervall.Text);
         }
 
+        private void button14_Click(object sender, EventArgs e)
+        {
+            HDKnxHandler.ReadParametersFromEsfFile("ADS-TEC.esf");
+        }
     }
 }
