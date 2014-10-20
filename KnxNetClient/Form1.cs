@@ -34,7 +34,7 @@ namespace Knx
             HDKnxHandler.Load();
             KnxCon.SetLog(AddLogText);
             KnxCon.SetDebugTo(AddDebugText);
-            KnxCon.SetReceivedFunction(NewTelegramReceived);
+            //KnxCon.SetReceivedFunction(NewTelegramReceived);
             KnxCon.SetInfo(NewInfoReceived);
             KnxCon.SetDataChangedFunction(DataChanged);
             KnxCon.SetRawReceivedFunction(NewRawTelegramReceived);
