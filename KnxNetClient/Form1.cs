@@ -324,5 +324,30 @@ namespace Knx
         {
             HDKnxHandler.ReadParametersFromEsfFile("ADS-TEC.esf");
         }
+
+
+        private void btn_DimDunkler_MouseDown(object sender, MouseEventArgs e)
+        {
+            bt_SendDimDunkler_Click(sender, e);
+        }
+
+        private void btn_DimDunkler_MouseUp(object sender, MouseEventArgs e)
+        {
+            btn_SendDimStop_Click(sender, e);
+        }
+
+        private void btn_DimHeller_MouseDown(object sender, MouseEventArgs e)
+        {
+            btn_SendDimHeller_Click(sender, e);
+        }
+
+        private void btn_DimHeller_MouseUp(object sender, MouseEventArgs e)
+        {
+            btn_SendDimStop_Click(sender, e);
+        }
+
+
+
+
     }
 }

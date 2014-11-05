@@ -36,10 +36,10 @@
             this.button5 = new System.Windows.Forms.Button();
             this.cBGatewayIP = new System.Windows.Forms.ComboBox();
             this.timerFileName = new System.Windows.Forms.Timer(this.components);
-            this.button3 = new System.Windows.Forms.Button();
+            this.btn_DimHeller = new System.Windows.Forms.Button();
             this.button7 = new System.Windows.Forms.Button();
             this.button8 = new System.Windows.Forms.Button();
-            this.button9 = new System.Windows.Forms.Button();
+            this.btn_DimDunkler = new System.Windows.Forms.Button();
             this.button6 = new System.Windows.Forms.Button();
             this.button10 = new System.Windows.Forms.Button();
             this.button11 = new System.Windows.Forms.Button();
@@ -121,16 +121,17 @@
             this.timerFileName.Interval = 60000;
             this.timerFileName.Tick += new System.EventHandler(this.timerFileName_Tick);
             // 
-            // button3
+            // btn_DimHeller
             // 
-            this.button3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button3.Location = new System.Drawing.Point(955, 12);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(61, 35);
-            this.button3.TabIndex = 11;
-            this.button3.Text = "Dim RrPt heller";
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.btn_SendDimHeller_Click);
+            this.btn_DimHeller.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btn_DimHeller.Location = new System.Drawing.Point(955, 12);
+            this.btn_DimHeller.Name = "btn_DimHeller";
+            this.btn_DimHeller.Size = new System.Drawing.Size(61, 35);
+            this.btn_DimHeller.TabIndex = 11;
+            this.btn_DimHeller.Text = "Dim RrPt heller";
+            this.btn_DimHeller.UseVisualStyleBackColor = true;
+            this.btn_DimHeller.MouseDown += new System.Windows.Forms.MouseEventHandler(this.btn_DimHeller_MouseDown);
+            this.btn_DimHeller.MouseUp += new System.Windows.Forms.MouseEventHandler(this.btn_DimHeller_MouseUp);
             // 
             // button7
             // 
@@ -154,16 +155,17 @@
             this.button8.UseVisualStyleBackColor = true;
             this.button8.Click += new System.EventHandler(this.btn_SendAus_Click);
             // 
-            // button9
+            // btn_DimDunkler
             // 
-            this.button9.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button9.Location = new System.Drawing.Point(955, 49);
-            this.button9.Name = "button9";
-            this.button9.Size = new System.Drawing.Size(61, 35);
-            this.button9.TabIndex = 10;
-            this.button9.Text = "Dim RrPt dunkler";
-            this.button9.UseVisualStyleBackColor = true;
-            this.button9.Click += new System.EventHandler(this.bt_SendDimDunkler_Click);
+            this.btn_DimDunkler.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btn_DimDunkler.Location = new System.Drawing.Point(955, 49);
+            this.btn_DimDunkler.Name = "btn_DimDunkler";
+            this.btn_DimDunkler.Size = new System.Drawing.Size(61, 35);
+            this.btn_DimDunkler.TabIndex = 10;
+            this.btn_DimDunkler.Text = "Dim RrPt dunkler";
+            this.btn_DimDunkler.UseVisualStyleBackColor = true;
+            this.btn_DimDunkler.MouseDown += new System.Windows.Forms.MouseEventHandler(this.btn_DimDunkler_MouseDown);
+            this.btn_DimDunkler.MouseUp += new System.Windows.Forms.MouseEventHandler(this.btn_DimDunkler_MouseUp);
             // 
             // button6
             // 
@@ -252,8 +254,8 @@
             this.Controls.Add(this.button11);
             this.Controls.Add(this.button12);
             this.Controls.Add(this.button6);
-            this.Controls.Add(this.button3);
-            this.Controls.Add(this.button9);
+            this.Controls.Add(this.btn_DimHeller);
+            this.Controls.Add(this.btn_DimDunkler);
             this.Controls.Add(this.cBGatewayIP);
             this.Controls.Add(this.button5);
             this.Controls.Add(this.button4);
@@ -278,10 +280,10 @@
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.ComboBox cBGatewayIP;
         private System.Windows.Forms.Timer timerFileName;
-        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.Button btn_DimHeller;
         private System.Windows.Forms.Button button7;
         private System.Windows.Forms.Button button8;
-        private System.Windows.Forms.Button button9;
+        private System.Windows.Forms.Button btn_DimDunkler;
         private System.Windows.Forms.Button button6;
         private System.Windows.Forms.Button button10;
         private System.Windows.Forms.Button button11;
