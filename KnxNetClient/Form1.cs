@@ -324,5 +324,10 @@ namespace Knx
         {
             HDKnxHandler.ReadParametersFromEsfFile("ADS-TEC.esf");
         }
+
+        private void button15_Click(object sender, EventArgs e)
+        {
+            HDKnxHandler.ReadParametersFromEsfFile("Petzoldt.esf");
+        }
     }
 }
