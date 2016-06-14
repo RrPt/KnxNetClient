@@ -36,9 +36,6 @@
     <ApplicationIcon>KnxLogo.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="HDObjects">
-      <HintPath>..\..\HDObjects\HDObjects\bin\Debug\HDObjects.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
@@ -80,6 +77,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="KnxLogo.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\HDObjects\HDObjects\HDObjects.csproj">
+      <Project>{A8F007FC-D204-4AC8-A6F9-81C9BA6DF4D0}</Project>
+      <Name>HDObjects</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
