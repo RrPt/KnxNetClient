@@ -266,6 +266,7 @@
             this.Controls.Add(this.button1);
             this.Name = "KnxNetForm";
             this.Text = "KnxNetClient";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.KnxNetForm_FormClosing);
             this.ResumeLayout(false);
             this.PerformLayout();
 

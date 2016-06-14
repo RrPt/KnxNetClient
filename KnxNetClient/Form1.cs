@@ -34,7 +34,7 @@ namespace Knx
             HDKnxHandler.Load();
             KnxCon.SetLog(AddLogText);
             KnxCon.SetDebugTo(AddDebugText);
-            //KnxCon.SetReceivedFunction(NewTelegramReceived);
+            //KnxCon.SetReceivedFunction(NewTelegramReceived); 
             KnxCon.SetInfo(NewInfoReceived);
             KnxCon.SetDataChangedFunction(DataChanged);
             KnxCon.SetRawReceivedFunction(NewRawTelegramReceived);
@@ -344,6 +344,11 @@ namespace Knx
         private void btn_DimHeller_MouseUp(object sender, MouseEventArgs e)
         {
             btn_SendDimStop_Click(sender, e);
+        }
+
+        private void KnxNetForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Close_Click(sender, e);
         }
 
 
