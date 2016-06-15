@@ -32,10 +32,10 @@ namespace Knx
             debugFilename = "KNXNetClientDebug_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".txt";
             Filename = calculateInitialFilename();
             HDKnxHandler.Load();
-            KnxCon.SetLog(AddLogText);
-            KnxCon.SetDebugTo(AddDebugText);
-            KnxCon.SetReceivedFunction(NewTelegramReceived);
-            KnxCon.SetInfo(NewInfoReceived);
+            KnxCon.SetErrFunction(AddLogText);
+            KnxCon.SetDebugFunction(AddDebugText);
+            //KnxCon.SetReceivedFunction(NewTelegramReceived);
+            KnxCon.SetInfoFunction(NewInfoReceived);
             KnxCon.SetDataChangedFunction(DataChanged);
             KnxCon.SetRawReceivedFunction(NewRawTelegramReceived);
             tBHBIntervall_TextChanged(null, null);
@@ -64,7 +64,7 @@ namespace Knx
                     String IP = addr[i].ToString();
                     if (IP.StartsWith("192.168.254.")) cBGatewayIP.SelectedIndex = 1;
                     if (IP.StartsWith("10.")) cBGatewayIP.SelectedIndex = 1;
-                    if (IP.StartsWith("192.168.0.")) cBGatewayIP.SelectedIndex = 0;
+                    if (IP.StartsWith("192.168.22.")) cBGatewayIP.SelectedIndex = 0;
                 }
             }
 
@@ -79,7 +79,7 @@ namespace Knx
             }
             else
             {
-                AddToTextbox(Environment.NewLine + emi.ToString());
+                AddToTextbox(Environment.NewLine + "NT:"+ emi.ToString());
             }
         }
 
@@ -105,7 +105,7 @@ namespace Knx
         {
             if (InvokeRequired)
             {
-                BeginInvoke(new KnxNetConnection.SendInfoDelegate(NewInfoReceived), new object[] { txt });
+                BeginInvoke(new KnxNetConnection.MsgDelegate(NewInfoReceived), new object[] { txt });
             }
             else
             {
@@ -127,7 +127,7 @@ namespace Knx
                 {
                     if (hdKnx.emi != null)
                     {
-                        AddToTextbox(Environment.NewLine + hdKnx.ToString() + "  emi=" + hdKnx.emi.ToString());
+                        AddToTextbox(Environment.NewLine + "DC:" + hdKnx.ToString() + "  emi=" + hdKnx.emi.ToString());
                     }
                     else
                     {
