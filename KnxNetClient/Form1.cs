@@ -19,17 +19,18 @@ namespace Knx
         KnxNetConnection KnxCon = new KnxNetConnection();
         //static public System.Windows.Forms.TextBox tb_Log;
         delegate void StringParameterWithStatusDelegate(string Text);
-        String Filename = "KNXLog.trx";
-        String logFilename = "KNXNetClientLog.txt";
-        String debugFilename = "KNXNetClientDebug.txt";
+        String Filename = "log\\KNXLog.trx";
+        String logFilename = "log\\KNXNetClientLog.txt";
+        String debugFilename = "log\\KNXNetClientDebug.txt";
         const int msPerDay = 86400000;
         const int maxAnzLines = 200;
 
         public KnxNetForm()
         {
             InitializeComponent();
-            logFilename = "KNXNetClientLog_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".txt";
-            debugFilename = "KNXNetClientDebug_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".txt";
+            Directory.CreateDirectory("log");
+            logFilename = "log\\KNXNetClientLog_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".txt";
+            debugFilename = "log\\KNXNetClientDebug_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".txt";
             Filename = calculateInitialFilename();
             HDKnxHandler.Load();
             KnxCon.SetErrFunction(AddLogText);
@@ -47,7 +48,7 @@ namespace Knx
         private string calculateInitialFilename()
         {
             DateTime now = DateTime.Now;
-            String fn = "KnxLog_" + now.ToString("yyyyMMdd_HHmmss") + ".trx";
+            String fn = "log\\KnxLog_" + now.ToString("yyyyMMdd_HHmmss") + ".trx";
             return fn;
         }
 
