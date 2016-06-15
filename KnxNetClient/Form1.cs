@@ -15,7 +15,7 @@ namespace Knx
 {
     public partial class KnxNetForm : Form
     {
-        private static object threadlock = new object(); 
+        private static object threadlock = new object();
         KnxNetConnection KnxCon = new KnxNetConnection();
         //static public System.Windows.Forms.TextBox tb_Log;
         delegate void StringParameterWithStatusDelegate(string Text);
@@ -23,7 +23,7 @@ namespace Knx
         String logFilename = "KNXNetClientLog.txt";
         String debugFilename = "KNXNetClientDebug.txt";
         const int msPerDay = 86400000;
-        const int maxAnzLines=200;
+        const int maxAnzLines = 200;
 
         public KnxNetForm()
         {
@@ -94,8 +94,8 @@ namespace Knx
             {
                 //byte[] t = new byte[raw.Length];
                 //Array.Copy(raw, 0, t, 0, raw.Length);
-                String line =HomeData.KnxTools.BytesToTrxString(raw) + Environment.NewLine;
-                System.IO.File.AppendAllText(Filename,line);
+                String line = HomeData.KnxTools.BytesToTrxString(raw) + Environment.NewLine;
+                System.IO.File.AppendAllText(Filename, line);
             }
 
         }
@@ -131,12 +131,12 @@ namespace Knx
                     }
                     else
                     {
-                        AddToTextbox(Environment.NewLine + hdKnx.ToString() );
+                        AddToTextbox(Environment.NewLine + hdKnx.ToString());
                     }
                 }
                 catch (Exception e)
                 {
-                    
+
                     AddToTextbox(e.ToString());
                 }
             }
@@ -164,7 +164,7 @@ namespace Knx
 
         private void Open_Click(object sender, EventArgs e)
         {
-            String GatewayIp = (String) cBGatewayIP.SelectedItem;
+            String GatewayIp = (String)cBGatewayIP.SelectedItem;
             bool ok = KnxCon.Open(GatewayIp);
             if (!ok) AddToTextbox(Environment.NewLine + "Konnte keine Verbindung zum Gateway " + GatewayIp + " herstellen");
             else AddToTextbox(Environment.NewLine + "Connected mit Gateway " + GatewayIp + "  ChannelId=" + KnxCon.channelId);
@@ -334,7 +334,9 @@ namespace Knx
         private void btn_DimDunkler_MouseDown(object sender, MouseEventArgs e)
         {
             bt_SendDimDunkler_Click(sender, e);
-        }        private void btn_DimDunkler_MouseUp(object sender, MouseEventArgs e)
+        }
+
+        private void btn_DimDunkler_MouseUp(object sender, MouseEventArgs e)
         {
             btn_SendDimStop_Click(sender, e);
         }
@@ -353,5 +355,5 @@ namespace Knx
         {
             Close_Click(sender, e);
         }
-
+    }
 }
