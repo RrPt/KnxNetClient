@@ -34,7 +34,7 @@ namespace Knx
             HDKnxHandler.Load();
             KnxCon.SetLog(AddLogText);
             KnxCon.SetDebugTo(AddDebugText);
-            //KnxCon.SetReceivedFunction(NewTelegramReceived); 
+            KnxCon.SetReceivedFunction(NewTelegramReceived);
             KnxCon.SetInfo(NewInfoReceived);
             KnxCon.SetDataChangedFunction(DataChanged);
             KnxCon.SetRawReceivedFunction(NewRawTelegramReceived);
@@ -325,13 +325,16 @@ namespace Knx
             HDKnxHandler.ReadParametersFromEsfFile("ADS-TEC.esf");
         }
 
+        private void button15_Click(object sender, EventArgs e)
+        {
+            HDKnxHandler.ReadParametersFromEsfFile("Petzoldt.esf");
+
+        }
 
         private void btn_DimDunkler_MouseDown(object sender, MouseEventArgs e)
         {
             bt_SendDimDunkler_Click(sender, e);
-        }
-
-        private void btn_DimDunkler_MouseUp(object sender, MouseEventArgs e)
+        }        private void btn_DimDunkler_MouseUp(object sender, MouseEventArgs e)
         {
             btn_SendDimStop_Click(sender, e);
         }
@@ -351,8 +354,4 @@ namespace Knx
             Close_Click(sender, e);
         }
 
-
-
-
-    }
 }
