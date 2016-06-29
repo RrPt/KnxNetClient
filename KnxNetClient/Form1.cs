@@ -10,6 +10,7 @@ using System.Net;
 using EIBDef;
 using HomeData;
 using System.IO;
+using System.Threading;
 
 namespace Knx
 {
@@ -41,8 +42,14 @@ namespace Knx
             KnxCon.SetRawReceivedFunction(NewRawTelegramReceived);
             tBHBIntervall_TextChanged(null, null);
             SetDefaultGateway();
+            // bestimmen ms bis Mitternacht
             timerFileName.Interval = msPerDay - (int)DateTime.Now.TimeOfDay.TotalMilliseconds;
             timerFileName.Start();
+            // bestimmen wieviel ms bis um 8:00 Uhr
+            int msTo8 =  (int)(new DateTime(2016,1,1,8,0,0)).TimeOfDay.TotalMilliseconds - (int)DateTime.Now.TimeOfDay.TotalMilliseconds;
+            if (msTo8 < 0) msTo8 += msPerDay;
+            timerRollosRrPt.Interval = msTo8;
+            timerRollosRrPt.Start();
         }
 
         private string calculateInitialFilename()
@@ -355,6 +362,33 @@ namespace Knx
         private void KnxNetForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             Close_Click(sender, e);
+        }
+
+        private void btnRolloRrPtKorrektur_Click(object sender, EventArgs e)
+        {
+            rolloKorrektur();
+
+        }
+
+        private void rolloKorrektur()
+        {
+            cEMI emi = new cEMI(new EIB_Adress("1/1/1"), true);
+            KnxCon.Send(emi);
+            Thread.Sleep(400);
+            KnxCon.Send(emi);
+            Thread.Sleep(400);
+            emi.Eis1 = false;
+            KnxCon.Send(emi);
+            Thread.Sleep(400);
+        }
+
+        private void timerRollosRrPt_Tick(object sender, EventArgs e)
+        {
+            rolloKorrektur();
+
+            AddToTextbox(Environment.NewLine + "Korrektur Rollo RrPt");
+
+            timerRollosRrPt.Interval = msPerDay;
         }
     }
 }

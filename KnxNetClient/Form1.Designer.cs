@@ -48,6 +48,8 @@
             this.tBHBIntervall = new System.Windows.Forms.TextBox();
             this.button14 = new System.Windows.Forms.Button();
             this.button15 = new System.Windows.Forms.Button();
+            this.btnRolloRrPtKorrektur = new System.Windows.Forms.Button();
+            this.timerRollosRrPt = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
             // 
             // button1
@@ -87,7 +89,7 @@
             // button4
             // 
             this.button4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button4.Location = new System.Drawing.Point(1316, 12);
+            this.button4.Location = new System.Drawing.Point(1271, 17);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(75, 23);
             this.button4.TabIndex = 7;
@@ -98,7 +100,7 @@
             // button5
             // 
             this.button5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button5.Location = new System.Drawing.Point(1395, 12);
+            this.button5.Location = new System.Drawing.Point(1271, 55);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(75, 23);
             this.button5.TabIndex = 8;
@@ -125,7 +127,7 @@
             // btn_DimHeller
             // 
             this.btn_DimHeller.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btn_DimHeller.Location = new System.Drawing.Point(955, 12);
+            this.btn_DimHeller.Location = new System.Drawing.Point(332, 12);
             this.btn_DimHeller.Name = "btn_DimHeller";
             this.btn_DimHeller.Size = new System.Drawing.Size(61, 35);
             this.btn_DimHeller.TabIndex = 11;
@@ -137,7 +139,7 @@
             // button7
             // 
             this.button7.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button7.Location = new System.Drawing.Point(866, 12);
+            this.button7.Location = new System.Drawing.Point(243, 12);
             this.button7.Name = "button7";
             this.button7.Size = new System.Drawing.Size(83, 35);
             this.button7.TabIndex = 5;
@@ -148,7 +150,7 @@
             // button8
             // 
             this.button8.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button8.Location = new System.Drawing.Point(866, 49);
+            this.button8.Location = new System.Drawing.Point(243, 49);
             this.button8.Name = "button8";
             this.button8.Size = new System.Drawing.Size(83, 35);
             this.button8.TabIndex = 6;
@@ -159,7 +161,7 @@
             // btn_DimDunkler
             // 
             this.btn_DimDunkler.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btn_DimDunkler.Location = new System.Drawing.Point(955, 49);
+            this.btn_DimDunkler.Location = new System.Drawing.Point(332, 49);
             this.btn_DimDunkler.Name = "btn_DimDunkler";
             this.btn_DimDunkler.Size = new System.Drawing.Size(61, 35);
             this.btn_DimDunkler.TabIndex = 10;
@@ -171,7 +173,7 @@
             // button6
             // 
             this.button6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button6.Location = new System.Drawing.Point(1022, 12);
+            this.button6.Location = new System.Drawing.Point(399, 12);
             this.button6.Name = "button6";
             this.button6.Size = new System.Drawing.Size(83, 35);
             this.button6.TabIndex = 12;
@@ -182,7 +184,7 @@
             // button10
             // 
             this.button10.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button10.Location = new System.Drawing.Point(1227, 49);
+            this.button10.Location = new System.Drawing.Point(643, 48);
             this.button10.Name = "button10";
             this.button10.Size = new System.Drawing.Size(83, 35);
             this.button10.TabIndex = 15;
@@ -193,7 +195,7 @@
             // button11
             // 
             this.button11.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button11.Location = new System.Drawing.Point(1138, 12);
+            this.button11.Location = new System.Drawing.Point(554, 11);
             this.button11.Name = "button11";
             this.button11.Size = new System.Drawing.Size(83, 35);
             this.button11.TabIndex = 14;
@@ -204,7 +206,7 @@
             // button12
             // 
             this.button12.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button12.Location = new System.Drawing.Point(1138, 49);
+            this.button12.Location = new System.Drawing.Point(554, 48);
             this.button12.Name = "button12";
             this.button12.Size = new System.Drawing.Size(83, 35);
             this.button12.TabIndex = 13;
@@ -215,7 +217,7 @@
             // button13
             // 
             this.button13.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button13.Location = new System.Drawing.Point(1227, 12);
+            this.button13.Location = new System.Drawing.Point(643, 11);
             this.button13.Name = "button13";
             this.button13.Size = new System.Drawing.Size(83, 35);
             this.button13.TabIndex = 16;
@@ -235,7 +237,7 @@
             // button14
             // 
             this.button14.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button14.Location = new System.Drawing.Point(1377, 39);
+            this.button14.Location = new System.Drawing.Point(1363, 18);
             this.button14.Name = "button14";
             this.button14.Size = new System.Drawing.Size(93, 21);
             this.button14.TabIndex = 17;
@@ -246,7 +248,7 @@
             // button15
             // 
             this.button15.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button15.Location = new System.Drawing.Point(1377, 63);
+            this.button15.Location = new System.Drawing.Point(1363, 55);
             this.button15.Name = "button15";
             this.button15.Size = new System.Drawing.Size(93, 23);
             this.button15.TabIndex = 18;
@@ -254,11 +256,27 @@
             this.button15.UseVisualStyleBackColor = true;
             this.button15.Click += new System.EventHandler(this.button15_Click);
             // 
+            // btnRolloRrPtKorrektur
+            // 
+            this.btnRolloRrPtKorrektur.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnRolloRrPtKorrektur.Location = new System.Drawing.Point(732, 12);
+            this.btnRolloRrPtKorrektur.Name = "btnRolloRrPtKorrektur";
+            this.btnRolloRrPtKorrektur.Size = new System.Drawing.Size(83, 35);
+            this.btnRolloRrPtKorrektur.TabIndex = 19;
+            this.btnRolloRrPtKorrektur.Text = "Lamelle RrPt Korrektur";
+            this.btnRolloRrPtKorrektur.UseVisualStyleBackColor = true;
+            this.btnRolloRrPtKorrektur.Click += new System.EventHandler(this.btnRolloRrPtKorrektur_Click);
+            // 
+            // timerRollosRrPt
+            // 
+            this.timerRollosRrPt.Tick += new System.EventHandler(this.timerRollosRrPt_Tick);
+            // 
             // KnxNetForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1482, 551);
+            this.Controls.Add(this.btnRolloRrPtKorrektur);
             this.Controls.Add(this.button15);
             this.Controls.Add(this.button14);
             this.Controls.Add(this.tBHBIntervall);
@@ -306,6 +324,8 @@
         private System.Windows.Forms.TextBox tBHBIntervall;
         private System.Windows.Forms.Button button14;
         private System.Windows.Forms.Button button15;
+        private System.Windows.Forms.Button btnRolloRrPtKorrektur;
+        private System.Windows.Forms.Timer timerRollosRrPt;
     }
 }
 
