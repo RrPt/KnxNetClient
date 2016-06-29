@@ -382,13 +382,23 @@ namespace Knx
             Thread.Sleep(400);
         }
 
+
+        private void sheddachRunter()
+        {
+            cEMI emi = new cEMI(new EIB_Adress("6/1/2"), true);
+            KnxCon.Send(emi);
+        }
+
         private void timerRollosRrPt_Tick(object sender, EventArgs e)
         {
             rolloKorrektur();
+            sheddachRunter();
 
             AddToTextbox(Environment.NewLine + "Korrektur Rollo RrPt");
 
             timerRollosRrPt.Interval = msPerDay;
         }
+
+
     }
 }

@@ -296,7 +296,7 @@
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
             this.Name = "KnxNetForm";
-            this.Text = "KnxNetClient";
+            this.Text = "KnxNetClient      V16.6.29";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.KnxNetForm_FormClosing);
             this.ResumeLayout(false);
             this.PerformLayout();
