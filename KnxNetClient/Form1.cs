@@ -372,14 +372,16 @@ namespace Knx
 
         private void rolloKorrektur()
         {
-            cEMI emi = new cEMI(new EIB_Adress("1/1/1"), true);
+            cEMI emi = new cEMI(new EIB_Adress("1/1/0"), false);
             KnxCon.Send(emi);
-            Thread.Sleep(400);
-            KnxCon.Send(emi);
-            Thread.Sleep(400);
-            emi.Eis1 = false;
-            KnxCon.Send(emi);
-            Thread.Sleep(400);
+            Thread.Sleep(30000);
+            emi.Eis1 = true;
+            emi = new cEMI(new EIB_Adress("1/1/1"), true);
+            for (int i = 0; i < 7; i++)
+            {
+                KnxCon.Send(emi);
+                Thread.Sleep(400);
+            }
         }
 
 
