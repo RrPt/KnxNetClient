@@ -25,11 +25,22 @@ namespace Knx
         String debugFilename = "log\\KNXNetClientDebug.txt";
         const int msPerDay = 86400000;
         const int maxAnzLines = 200;
+        private ConfigListConfig selectedConfig;
 
         public KnxNetForm()
         {
             InitializeComponent();
+
             ConfigList configList = ConfigIO.read("KnxNetClient_Configs.xml");
+            // bestimmen der Default Config
+            selectedConfig = configList?.Config?[0];
+            foreach (var item in configList?.Config)
+            {
+                if (configList?.defaultConfig == item?.name) selectedConfig = item;
+            }
+
+            SetControls();
+
             Directory.CreateDirectory("log");
             logFilename = "log\\KNXNetClientLog_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".txt";
             debugFilename = "log\\KNXNetClientDebug_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".txt";
@@ -47,10 +58,45 @@ namespace Knx
             timerFileName.Interval = msPerDay - (int)DateTime.Now.TimeOfDay.TotalMilliseconds;
             timerFileName.Start();
             // bestimmen wieviel ms bis um 8:00 Uhr
-            int msTo8 =  (int)(new DateTime(2016,1,1,8,0,0)).TimeOfDay.TotalMilliseconds - (int)DateTime.Now.TimeOfDay.TotalMilliseconds;
+            int msTo8 = (int)(new DateTime(2016, 1, 1, 8, 0, 0)).TimeOfDay.TotalMilliseconds - (int)DateTime.Now.TimeOfDay.TotalMilliseconds;
             if (msTo8 < 0) msTo8 += msPerDay;
             timerRollosRrPt.Interval = msTo8;
             timerRollosRrPt.Start();
+        }
+
+        private void SetControls()
+        {
+            // Controls für die Lichtsteuerung setzen
+            LichtControl lc;
+            int idx = 0;
+            foreach (var light in selectedConfig.LightList)
+            {
+                lc = new LichtControl();
+                lc.Titel = light.name;
+                lc.EibAdress_IO = light.EibAdress_IO;
+                lc.EibAdress_Dimm = light.EibAdress_Dimm;
+                lc.SetKnxSendFunction(KnxCon.Send);
+                this.tpSteuerung.Controls.Add(lc);
+                lc.Location = new System.Drawing.Point(20, 100 + 120 * idx++);
+            }
+            this.Size = new Size(this.Size.Width, 200 + 120 * idx);
+
+            // Controls für die Rollosteuerung setzen
+            RolloControl rc;
+            idx = 0;
+            foreach (var light in selectedConfig.RolloList)
+            {
+                rc = new RolloControl();
+                rc.Titel = light.name;
+                rc.EibAdress_AufAb = light.EibAdress_AufAb;
+                rc.EibAdress_Lamelle = light.EibAdress_Lamelle;
+                rc.SetKnxSendFunction(KnxCon.Send);
+                this.tpSteuerung.Controls.Add(rc);
+                rc.Location = new System.Drawing.Point(420, 100 + 120 * idx++);
+            }
+            //this.Size = new Size(this.Size.Width, 200 + 120 * idx);
+
+
         }
 
         private string calculateInitialFilename()
@@ -244,66 +290,6 @@ namespace Knx
         }
 
 
-
-        private void bt_SendAn_Click(object sender, EventArgs e)
-        {
-            cEMI emi = new cEMI(new EIB_Adress("1/0/56"), true);
-            KnxCon.Send(emi);
-        }
-
-        private void btn_SendAus_Click(object sender, EventArgs e)
-        {
-            cEMI emi = new cEMI(new EIB_Adress("1/0/56"), false);
-            KnxCon.Send(emi);
-        }
-
-
-        private void bt_SendDimDunkler_Click(object sender, EventArgs e)
-        {
-            cEMI emi = new cEMI(new EIB_Adress("1/0/57"), (byte)1);
-            KnxCon.Send(emi);
-        }
-
-        private void btn_SendDimHeller_Click(object sender, EventArgs e)
-        {
-            cEMI emi = new cEMI(new EIB_Adress("1/0/57"), (byte)9);
-            KnxCon.Send(emi);
-        }
-
-        private void btn_SendDimStop_Click(object sender, EventArgs e)
-        {
-            cEMI emi = new cEMI(new EIB_Adress("1/0/57"), (byte)0);
-            KnxCon.Send(emi);
-        }
-
-
-        // Rollos
-        private void bt_RolloAb_Click(object sender, EventArgs e)
-        {
-            cEMI emi = new cEMI(new EIB_Adress("1/1/0"), true);
-            KnxCon.Send(emi);
-        }
-
-        private void btn_RolloAuf_Click(object sender, EventArgs e)
-        {
-            cEMI emi = new cEMI(new EIB_Adress("1/1/0"), false);
-            KnxCon.Send(emi);
-        }
-
-        private void bt_LamelleAb_Click(object sender, EventArgs e)
-        {
-            cEMI emi = new cEMI(new EIB_Adress("1/1/1"), true);
-            KnxCon.Send(emi);
-        }
-
-        private void btn_LamelleAuf_Click(object sender, EventArgs e)
-        {
-            cEMI emi = new cEMI(new EIB_Adress("1/1/1"), false);
-            KnxCon.Send(emi);
-        }
-
-
-
         private void button_WriteXML_Click(object sender, EventArgs e)
         {
             HDKnxHandler.WriteParametersToFile("KnxClientW.xml");
@@ -329,47 +315,12 @@ namespace Knx
             KnxCon.HeartbeatInterval = int.Parse(tBHBIntervall.Text);
         }
 
-        private void button14_Click(object sender, EventArgs e)
-        {
-            HDKnxHandler.ReadParametersFromEsfFile("ADS-TEC.esf");
-        }
-
-        private void button15_Click(object sender, EventArgs e)
-        {
-            HDKnxHandler.ReadParametersFromEsfFile("Petzoldt.esf");
-
-        }
-
-        private void btn_DimDunkler_MouseDown(object sender, MouseEventArgs e)
-        {
-            bt_SendDimDunkler_Click(sender, e);
-        }
-
-        private void btn_DimDunkler_MouseUp(object sender, MouseEventArgs e)
-        {
-            btn_SendDimStop_Click(sender, e);
-        }
-
-        private void btn_DimHeller_MouseDown(object sender, MouseEventArgs e)
-        {
-            btn_SendDimHeller_Click(sender, e);
-        }
-
-        private void btn_DimHeller_MouseUp(object sender, MouseEventArgs e)
-        {
-            btn_SendDimStop_Click(sender, e);
-        }
 
         private void KnxNetForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             Close_Click(sender, e);
         }
 
-        private void btnRolloRrPtKorrektur_Click(object sender, EventArgs e)
-        {
-            rolloKorrektur();
-
-        }
 
         private void rolloKorrektur()
         {
@@ -402,6 +353,14 @@ namespace Knx
             timerRollosRrPt.Interval = msPerDay;
         }
 
+        private void btn_load_ESF_ads_Click(object sender, EventArgs e)
+        {
+            HDKnxHandler.ReadParametersFromEsfFile("ADS-TEC.esf");
+        }
 
+        private void btn_load_ESF_petz_Click(object sender, EventArgs e)
+        {
+            HDKnxHandler.ReadParametersFromEsfFile("Petzoldt.esf");
+        }
     }
 }

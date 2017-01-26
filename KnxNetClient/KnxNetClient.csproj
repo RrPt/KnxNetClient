@@ -54,15 +54,33 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="LichtControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="LichtControl.Designer.cs">
+      <DependentUpon>LichtControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RolloControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="RolloControl.designer.cs">
+      <DependentUpon>RolloControl.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LichtControl.resx">
+      <DependentUpon>LichtControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <SubType>Designer</SubType>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RolloControl.resx">
+      <DependentUpon>RolloControl.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.config" />
     <None Include="Properties\Settings.settings">
