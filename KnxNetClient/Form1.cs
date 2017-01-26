@@ -29,6 +29,7 @@ namespace Knx
         public KnxNetForm()
         {
             InitializeComponent();
+            ConfigList configList = ConfigIO.read("KnxNetClient_Configs.xml");
             Directory.CreateDirectory("log");
             logFilename = "log\\KNXNetClientLog_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".txt";
             debugFilename = "log\\KNXNetClientDebug_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".txt";
@@ -394,7 +395,7 @@ namespace Knx
         private void timerRollosRrPt_Tick(object sender, EventArgs e)
         {
             rolloKorrektur();
-            sheddachRunter();
+            //sheddachRunter();
 
             AddToTextbox(Environment.NewLine + "Korrektur Rollo RrPt");
 
