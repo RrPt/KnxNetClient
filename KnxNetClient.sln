@@ -1,6 +1,8 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KnxNetClient", "KnxNetClient\KnxNetClient.csproj", "{BD90ED53-CEF6-4F68-BBEA-3FFA14A0E2FE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HDObjects", "..\HDObjects\HDObjects\HDObjects.csproj", "{A8F007FC-D204-4AC8-A6F9-81C9BA6DF4D0}"
