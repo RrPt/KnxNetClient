@@ -40,6 +40,7 @@ namespace Knx
             }
 
             SetControls();
+            tabControl1.SelectTab(1);
 
             Directory.CreateDirectory("log");
             logFilename = "log\\KNXNetClientLog_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".txt";
@@ -182,7 +183,7 @@ namespace Knx
                 {
                     if (hdKnx.emi != null)
                     {
-                        AddToTextbox(Environment.NewLine + "DC:" + hdKnx.ToString() + "  emi=" + hdKnx.emi.ToString());
+                        AddToTextbox(Environment.NewLine + hdKnx.ToString() );
                     }
                     else
                     {
@@ -361,6 +362,11 @@ namespace Knx
         private void btn_load_ESF_petz_Click(object sender, EventArgs e)
         {
             HDKnxHandler.ReadParametersFromEsfFile("Petzoldt.esf");
+        }
+
+        private void KnxNetForm_Shown(object sender, EventArgs e)
+        {
+            Open_Click(null, null);
         }
     }
 }

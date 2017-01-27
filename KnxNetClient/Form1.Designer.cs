@@ -71,7 +71,7 @@
             this.tabControl1.Location = new System.Drawing.Point(12, 12);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(1474, 527);
+            this.tabControl1.Size = new System.Drawing.Size(872, 527);
             this.tabControl1.TabIndex = 22;
             // 
             // tpDebug
@@ -88,7 +88,7 @@
             this.tpDebug.Location = new System.Drawing.Point(4, 22);
             this.tpDebug.Name = "tpDebug";
             this.tpDebug.Padding = new System.Windows.Forms.Padding(3);
-            this.tpDebug.Size = new System.Drawing.Size(1466, 501);
+            this.tpDebug.Size = new System.Drawing.Size(864, 501);
             this.tpDebug.TabIndex = 0;
             this.tpDebug.Text = "Debug";
             this.tpDebug.UseVisualStyleBackColor = true;
@@ -96,7 +96,7 @@
             // btn_load_ESF_petz
             // 
             this.btn_load_ESF_petz.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btn_load_ESF_petz.Location = new System.Drawing.Point(1190, 7);
+            this.btn_load_ESF_petz.Location = new System.Drawing.Point(759, 7);
             this.btn_load_ESF_petz.Name = "btn_load_ESF_petz";
             this.btn_load_ESF_petz.Size = new System.Drawing.Size(93, 23);
             this.btn_load_ESF_petz.TabIndex = 22;
@@ -107,7 +107,7 @@
             // btn_load_ESF_ads
             // 
             this.btn_load_ESF_ads.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btn_load_ESF_ads.Location = new System.Drawing.Point(1091, 8);
+            this.btn_load_ESF_ads.Location = new System.Drawing.Point(660, 8);
             this.btn_load_ESF_ads.Name = "btn_load_ESF_ads";
             this.btn_load_ESF_ads.Size = new System.Drawing.Size(93, 21);
             this.btn_load_ESF_ads.TabIndex = 21;
@@ -118,7 +118,7 @@
             // button5
             // 
             this.button5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button5.Location = new System.Drawing.Point(918, 7);
+            this.button5.Location = new System.Drawing.Point(487, 7);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(75, 23);
             this.button5.TabIndex = 20;
@@ -129,7 +129,7 @@
             // button4
             // 
             this.button4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button4.Location = new System.Drawing.Point(999, 7);
+            this.button4.Location = new System.Drawing.Point(568, 7);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(75, 23);
             this.button4.TabIndex = 19;
@@ -187,7 +187,7 @@
             this.tBResponse.Multiline = true;
             this.tBResponse.Name = "tBResponse";
             this.tBResponse.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.tBResponse.Size = new System.Drawing.Size(1448, 433);
+            this.tBResponse.Size = new System.Drawing.Size(846, 433);
             this.tBResponse.TabIndex = 3;
             // 
             // tpSteuerung
@@ -197,7 +197,7 @@
             this.tpSteuerung.Location = new System.Drawing.Point(4, 22);
             this.tpSteuerung.Name = "tpSteuerung";
             this.tpSteuerung.Padding = new System.Windows.Forms.Padding(3);
-            this.tpSteuerung.Size = new System.Drawing.Size(1466, 501);
+            this.tpSteuerung.Size = new System.Drawing.Size(864, 501);
             this.tpSteuerung.TabIndex = 1;
             this.tpSteuerung.Text = "Steuerung";
             this.tpSteuerung.UseVisualStyleBackColor = true;
@@ -206,7 +206,7 @@
             // 
             this.pictureBox2.BackColor = System.Drawing.Color.Transparent;
             this.pictureBox2.Image = global::Knx.Properties.Resources.Rollo;
-            this.pictureBox2.Location = new System.Drawing.Point(622, 6);
+            this.pictureBox2.Location = new System.Drawing.Point(532, 0);
             this.pictureBox2.Name = "pictureBox2";
             this.pictureBox2.Size = new System.Drawing.Size(80, 72);
             this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -218,7 +218,7 @@
             this.pictureBox1.BackColor = System.Drawing.Color.Transparent;
             this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.pictureBox1.Image = global::Knx.Properties.Resources.Gluehlampe2;
-            this.pictureBox1.Location = new System.Drawing.Point(157, 0);
+            this.pictureBox1.Location = new System.Drawing.Point(132, 0);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(85, 72);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -229,11 +229,12 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1498, 551);
+            this.ClientSize = new System.Drawing.Size(896, 551);
             this.Controls.Add(this.tabControl1);
             this.Name = "KnxNetForm";
             this.Text = "KnxNetClient      V17.1.26";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.KnxNetForm_FormClosing);
+            this.Shown += new System.EventHandler(this.KnxNetForm_Shown);
             this.tabControl1.ResumeLayout(false);
             this.tpDebug.ResumeLayout(false);
             this.tpDebug.PerformLayout();
