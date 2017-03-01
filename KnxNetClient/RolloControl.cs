@@ -68,6 +68,14 @@ namespace Knx
 
         private void btn_Lamelle_Korr_Click(object sender, EventArgs e)
         {
+
+            Thread rolloThread;
+            rolloThread = new Thread(new ThreadStart(rolloKorrektur));
+            rolloThread.Start();
+        }
+
+        private void rolloKorrektur()
+        { 
             cEMI emi = new cEMI(eibAdress_AufAb, false);
             Send(emi);
             Thread.Sleep(30000);

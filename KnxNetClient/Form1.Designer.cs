@@ -234,6 +234,7 @@
             this.Name = "KnxNetForm";
             this.Text = "KnxNetClient      V17.1.26";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.KnxNetForm_FormClosing);
+            this.Load += new System.EventHandler(this.KnxNetForm_Load);
             this.Shown += new System.EventHandler(this.KnxNetForm_Shown);
             this.tabControl1.ResumeLayout(false);
             this.tpDebug.ResumeLayout(false);

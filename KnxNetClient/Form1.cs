@@ -344,9 +344,13 @@ namespace Knx
             KnxCon.Send(emi);
         }
 
+        // wird nur früh um 8 aufgerufen, die GUI-Funktion macht das Control
         private void timerRollosRrPt_Tick(object sender, EventArgs e)
         {
-            rolloKorrektur();
+            Thread rolloThread;
+            rolloThread = new Thread(new ThreadStart(rolloKorrektur));
+            rolloThread.Start();
+
             //sheddachRunter();
 
             AddToTextbox(Environment.NewLine + "Korrektur Rollo RrPt");
@@ -367,6 +371,11 @@ namespace Knx
         private void KnxNetForm_Shown(object sender, EventArgs e)
         {
             Open_Click(null, null);
+        }
+
+        private void KnxNetForm_Load(object sender, EventArgs e)
+        {
+            this.Text = String.Format("KnxNetClient V{0}", Program.versionStr);
         }
     }
 }
