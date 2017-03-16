@@ -45,6 +45,7 @@
             this.tpSteuerung = new System.Windows.Forms.TabPage();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.tBTemperatur = new System.Windows.Forms.TextBox();
             this.tabControl1.SuspendLayout();
             this.tpDebug.SuspendLayout();
             this.tpSteuerung.SuspendLayout();
@@ -192,6 +193,7 @@
             // 
             // tpSteuerung
             // 
+            this.tpSteuerung.Controls.Add(this.tBTemperatur);
             this.tpSteuerung.Controls.Add(this.pictureBox2);
             this.tpSteuerung.Controls.Add(this.pictureBox1);
             this.tpSteuerung.Location = new System.Drawing.Point(4, 22);
@@ -225,6 +227,14 @@
             this.pictureBox1.TabIndex = 32;
             this.pictureBox1.TabStop = false;
             // 
+            // tBTemperatur
+            // 
+            this.tBTemperatur.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tBTemperatur.Location = new System.Drawing.Point(301, 33);
+            this.tBTemperatur.Name = "tBTemperatur";
+            this.tBTemperatur.Size = new System.Drawing.Size(100, 38);
+            this.tBTemperatur.TabIndex = 34;
+            // 
             // KnxNetForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -240,6 +250,7 @@
             this.tpDebug.ResumeLayout(false);
             this.tpDebug.PerformLayout();
             this.tpSteuerung.ResumeLayout(false);
+            this.tpSteuerung.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
@@ -263,6 +274,7 @@
         private System.Windows.Forms.TabPage tpSteuerung;
         private System.Windows.Forms.PictureBox pictureBox2;
         private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.TextBox tBTemperatur;
     }
 }
 

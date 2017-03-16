@@ -26,6 +26,7 @@ namespace Knx
         const int msPerDay = 86400000;
         const int maxAnzLines = 200;
         private ConfigListConfig selectedConfig;
+        float temperatur=-999;
 
         public KnxNetForm()
         {
@@ -63,6 +64,7 @@ namespace Knx
             if (msTo8 < 0) msTo8 += msPerDay;
             timerRollosRrPt.Interval = msTo8;
             timerRollosRrPt.Start();
+            tBTemperatur.Text = temperatur + "°C";
         }
 
         private void SetControls()
@@ -181,13 +183,14 @@ namespace Knx
             {
                 try
                 {
-                    if (hdKnx.emi != null)
+                    AddToTextbox(Environment.NewLine + hdKnx.ToString());
+
+                    var x = new EIB_Adress(0, 1, 24).Adr;
+                    if (hdKnx.destAdr.Adr == x)
                     {
-                        AddToTextbox(Environment.NewLine + hdKnx.ToString() );
-                    }
-                    else
-                    {
-                        AddToTextbox(Environment.NewLine + hdKnx.ToString());
+                        temperatur = hdKnx.emi.Eis5;
+                        tBTemperatur.Text = temperatur + "°C";
+                        //AddToTextbox("Temperatur(" + hdKnx.destAdr.Adr.ToString()+")="+temperatur+"°C");
                     }
                 }
                 catch (Exception e)
