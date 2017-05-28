@@ -354,7 +354,7 @@ namespace Knx
             rolloThread = new Thread(new ThreadStart(rolloKorrektur));
             rolloThread.Start();
 
-            //sheddachRunter();
+            sheddachRunter();
 
             AddToTextbox(Environment.NewLine + "Korrektur Rollo RrPt");
 
