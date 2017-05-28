@@ -43,14 +43,17 @@
             this.cBGatewayIP = new System.Windows.Forms.ComboBox();
             this.tBResponse = new System.Windows.Forms.TextBox();
             this.tpSteuerung = new System.Windows.Forms.TabPage();
+            this.tBTemperatur = new System.Windows.Forms.TextBox();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.tBTemperatur = new System.Windows.Forms.TextBox();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.rC_Markise = new Knx.RolloControl();
             this.tabControl1.SuspendLayout();
             this.tpDebug.SuspendLayout();
             this.tpSteuerung.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            this.tabPage1.SuspendLayout();
             this.SuspendLayout();
             // 
             // timerFileName
@@ -69,6 +72,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControl1.Controls.Add(this.tpDebug);
             this.tabControl1.Controls.Add(this.tpSteuerung);
+            this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Location = new System.Drawing.Point(12, 12);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
@@ -204,6 +208,14 @@
             this.tpSteuerung.Text = "Steuerung";
             this.tpSteuerung.UseVisualStyleBackColor = true;
             // 
+            // tBTemperatur
+            // 
+            this.tBTemperatur.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tBTemperatur.Location = new System.Drawing.Point(301, 33);
+            this.tBTemperatur.Name = "tBTemperatur";
+            this.tBTemperatur.Size = new System.Drawing.Size(100, 38);
+            this.tBTemperatur.TabIndex = 34;
+            // 
             // pictureBox2
             // 
             this.pictureBox2.BackColor = System.Drawing.Color.Transparent;
@@ -227,13 +239,28 @@
             this.pictureBox1.TabIndex = 32;
             this.pictureBox1.TabStop = false;
             // 
-            // tBTemperatur
+            // tabPage1
             // 
-            this.tBTemperatur.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tBTemperatur.Location = new System.Drawing.Point(301, 33);
-            this.tBTemperatur.Name = "tBTemperatur";
-            this.tBTemperatur.Size = new System.Drawing.Size(100, 38);
-            this.tBTemperatur.TabIndex = 34;
+            this.tabPage1.Controls.Add(this.rC_Markise);
+            this.tabPage1.Location = new System.Drawing.Point(4, 22);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage1.Size = new System.Drawing.Size(864, 501);
+            this.tabPage1.TabIndex = 2;
+            this.tabPage1.Text = "Markise";
+            this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // rolloControl1
+            // 
+            this.rC_Markise.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.rC_Markise.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.rC_Markise.Location = new System.Drawing.Point(6, 26);
+            this.rC_Markise.Name = "rolloControl1";
+            this.rC_Markise.Size = new System.Drawing.Size(832, 469);
+            this.rC_Markise.TabIndex = 0;
+            this.rC_Markise.Titel = "Licht";
             // 
             // KnxNetForm
             // 
@@ -253,6 +280,7 @@
             this.tpSteuerung.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            this.tabPage1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -275,6 +303,8 @@
         private System.Windows.Forms.PictureBox pictureBox2;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.TextBox tBTemperatur;
+        private System.Windows.Forms.TabPage tabPage1;
+        private RolloControl rC_Markise;
     }
 }
 

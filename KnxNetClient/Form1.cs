@@ -99,6 +99,12 @@ namespace Knx
             }
             //this.Size = new Size(this.Size.Width, 200 + 120 * idx);
 
+            // Markisen TAb Control setzen
+            rC_Markise.Titel = "Markisensteuerung";
+            rC_Markise.EibAdress_AufAb = selectedConfig.RolloList[1].EibAdress_AufAb;
+            rC_Markise.EibAdress_Lamelle = selectedConfig.RolloList[1].EibAdress_Lamelle;
+            rC_Markise.SetKnxSendFunction(KnxCon.Send);
+
 
         }
 

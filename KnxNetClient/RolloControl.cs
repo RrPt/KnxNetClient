@@ -74,18 +74,28 @@ namespace Knx
             rolloThread.Start();
         }
 
+        //private void rolloKorrektur()
+        //{
+        //    cEMI emi = new cEMI(eibAdress_AufAb, false);
+        //    Send(emi);
+        //    Thread.Sleep(30000);
+        //    emi.Eis1 = true;
+        //    emi = new cEMI(eibAdress_Lamelle, true);
+        //    for (int i = 0; i < 7; i++)
+        //    {
+        //        Send(emi);
+        //        Thread.Sleep(400);
+        //    }
+        //}
+
         private void rolloKorrektur()
-        { 
+        {
             cEMI emi = new cEMI(eibAdress_AufAb, false);
             Send(emi);
-            Thread.Sleep(30000);
+            Thread.Sleep(30);
             emi.Eis1 = true;
             emi = new cEMI(eibAdress_Lamelle, true);
-            for (int i = 0; i < 7; i++)
-            {
-                Send(emi);
-                Thread.Sleep(400);
-            }
+            Send(emi);
         }
 
         private void btn_Lamelle_auf_Click(object sender, EventArgs e)
@@ -98,6 +108,31 @@ namespace Knx
         {
             cEMI emi = new cEMI(eibAdress_Lamelle, true);
             Send(emi);
+        }
+
+        private void groupBox_Resize(object sender, EventArgs e)
+        {
+            Size s = new Size(groupBox.Size.Width*35/100, groupBox.Size.Height / 2-10 );
+            Point l = new Point(20, groupBox.Size.Height / 2);
+            btn_ab.Size = s;
+            btn_ab.Location = l;
+
+            l = new Point(20, 5);
+            btn_auf.Size = s;
+            btn_auf.Location = l;
+
+            l = new Point((groupBox.Size.Width*38)/100+10, 5);
+            btn_Lamelle_auf.Size = s;
+            btn_Lamelle_auf.Location = l;
+
+            l = new Point(groupBox.Size.Width * 38 / 100+10, groupBox.Size.Height / 2);
+            btn_Lamelle_ab.Size = s;
+            btn_Lamelle_ab.Location = l;
+
+            s = new Size(groupBox.Size.Width*25/100, groupBox.Size.Height - 15);
+            l = new Point(groupBox.Size.Width * 72 / 100+20, 5);
+            btn_Stop.Size = s;
+            btn_Stop.Location = l;
         }
     }
 }
