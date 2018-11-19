@@ -43,11 +43,20 @@
             this.cBGatewayIP = new System.Windows.Forms.ComboBox();
             this.tBResponse = new System.Windows.Forms.TextBox();
             this.tpSteuerung = new System.Windows.Forms.TabPage();
+            this.lblAussenHelligkeit = new System.Windows.Forms.Label();
             this.tBTemperatur = new System.Windows.Forms.TextBox();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.lblHelligkeitSued = new System.Windows.Forms.Label();
+            this.lblHelligkeitOst = new System.Windows.Forms.Label();
+            this.lblHelligkeitWest = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
             this.rC_Markise = new Knx.RolloControl();
+            this.btnTest = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tpDebug.SuspendLayout();
             this.tpSteuerung.SuspendLayout();
@@ -81,6 +90,7 @@
             // 
             // tpDebug
             // 
+            this.tpDebug.Controls.Add(this.btnTest);
             this.tpDebug.Controls.Add(this.btn_load_ESF_petz);
             this.tpDebug.Controls.Add(this.btn_load_ESF_ads);
             this.tpDebug.Controls.Add(this.button5);
@@ -197,6 +207,14 @@
             // 
             // tpSteuerung
             // 
+            this.tpSteuerung.Controls.Add(this.label1);
+            this.tpSteuerung.Controls.Add(this.label2);
+            this.tpSteuerung.Controls.Add(this.label3);
+            this.tpSteuerung.Controls.Add(this.label4);
+            this.tpSteuerung.Controls.Add(this.lblHelligkeitWest);
+            this.tpSteuerung.Controls.Add(this.lblHelligkeitOst);
+            this.tpSteuerung.Controls.Add(this.lblHelligkeitSued);
+            this.tpSteuerung.Controls.Add(this.lblAussenHelligkeit);
             this.tpSteuerung.Controls.Add(this.tBTemperatur);
             this.tpSteuerung.Controls.Add(this.pictureBox2);
             this.tpSteuerung.Controls.Add(this.pictureBox1);
@@ -207,6 +225,15 @@
             this.tpSteuerung.TabIndex = 1;
             this.tpSteuerung.Text = "Steuerung";
             this.tpSteuerung.UseVisualStyleBackColor = true;
+            // 
+            // lblAussenHelligkeit
+            // 
+            this.lblAussenHelligkeit.AutoSize = true;
+            this.lblAussenHelligkeit.Location = new System.Drawing.Point(742, 12);
+            this.lblAussenHelligkeit.Name = "lblAussenHelligkeit";
+            this.lblAussenHelligkeit.Size = new System.Drawing.Size(38, 13);
+            this.lblAussenHelligkeit.TabIndex = 35;
+            this.lblAussenHelligkeit.Text = "Außen";
             // 
             // tBTemperatur
             // 
@@ -250,17 +277,91 @@
             this.tabPage1.Text = "Markise";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
-            // rolloControl1
+            // lblHelligkeitSued
+            // 
+            this.lblHelligkeitSued.AutoSize = true;
+            this.lblHelligkeitSued.Location = new System.Drawing.Point(742, 33);
+            this.lblHelligkeitSued.Name = "lblHelligkeitSued";
+            this.lblHelligkeitSued.Size = new System.Drawing.Size(14, 13);
+            this.lblHelligkeitSued.TabIndex = 36;
+            this.lblHelligkeitSued.Text = "S";
+            // 
+            // lblHelligkeitOst
+            // 
+            this.lblHelligkeitOst.AutoSize = true;
+            this.lblHelligkeitOst.Location = new System.Drawing.Point(742, 51);
+            this.lblHelligkeitOst.Name = "lblHelligkeitOst";
+            this.lblHelligkeitOst.Size = new System.Drawing.Size(15, 13);
+            this.lblHelligkeitOst.TabIndex = 37;
+            this.lblHelligkeitOst.Text = "O";
+            // 
+            // lblHelligkeitWest
+            // 
+            this.lblHelligkeitWest.AutoSize = true;
+            this.lblHelligkeitWest.Location = new System.Drawing.Point(742, 73);
+            this.lblHelligkeitWest.Name = "lblHelligkeitWest";
+            this.lblHelligkeitWest.Size = new System.Drawing.Size(18, 13);
+            this.lblHelligkeitWest.TabIndex = 38;
+            this.lblHelligkeitWest.Text = "W";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(682, 73);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(18, 13);
+            this.label1.TabIndex = 42;
+            this.label1.Text = "W";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(682, 51);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(15, 13);
+            this.label2.TabIndex = 41;
+            this.label2.Text = "O";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(682, 33);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(14, 13);
+            this.label3.TabIndex = 40;
+            this.label3.Text = "S";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(682, 12);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(50, 13);
+            this.label4.TabIndex = 39;
+            this.label4.Text = "Helligkeit";
+            // 
+            // rC_Markise
             // 
             this.rC_Markise.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.rC_Markise.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.rC_Markise.Location = new System.Drawing.Point(6, 26);
-            this.rC_Markise.Name = "rolloControl1";
+            this.rC_Markise.Name = "rC_Markise";
             this.rC_Markise.Size = new System.Drawing.Size(832, 469);
             this.rC_Markise.TabIndex = 0;
             this.rC_Markise.Titel = "Licht";
+            // 
+            // btnTest
+            // 
+            this.btnTest.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnTest.Location = new System.Drawing.Point(444, 6);
+            this.btnTest.Name = "btnTest";
+            this.btnTest.Size = new System.Drawing.Size(40, 23);
+            this.btnTest.TabIndex = 23;
+            this.btnTest.Text = "Test";
+            this.btnTest.UseVisualStyleBackColor = true;
+            this.btnTest.Click += new System.EventHandler(this.btnTest_Click);
             // 
             // KnxNetForm
             // 
@@ -305,6 +406,15 @@
         private System.Windows.Forms.TextBox tBTemperatur;
         private System.Windows.Forms.TabPage tabPage1;
         private RolloControl rC_Markise;
+        private System.Windows.Forms.Label lblAussenHelligkeit;
+        private System.Windows.Forms.Label lblHelligkeitWest;
+        private System.Windows.Forms.Label lblHelligkeitOst;
+        private System.Windows.Forms.Label lblHelligkeitSued;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Button btnTest;
     }
 }
 

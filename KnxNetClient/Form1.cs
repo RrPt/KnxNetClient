@@ -27,6 +27,11 @@ namespace Knx
         const int maxAnzLines = 200;
         private ConfigListConfig selectedConfig;
         float temperatur=-999;
+        float aussenHelligkeit = -999;
+        float AussenHelligkeitLast = -999;
+        float helligkeitSued = -999;
+        float helligkeitOst = -999;
+        float helligkeitWest = -999;
 
         public KnxNetForm()
         {
@@ -196,7 +201,36 @@ namespace Knx
                     {
                         temperatur = hdKnx.emi.Eis5;
                         tBTemperatur.Text = temperatur + "°C";
-                        //AddToTextbox("Temperatur(" + hdKnx.destAdr.Adr.ToString()+")="+temperatur+"°C");
+                    }
+                    // Aussenhelligkeit 
+                    if (hdKnx.destAdr.Adr == new EIB_Adress(0, 1, 10).Adr)
+                    {
+                        aussenHelligkeit = hdKnx.emi.Eis5;
+                        lblAussenHelligkeit.Text = aussenHelligkeit + "lux";
+                        float HellSchwelle = 100;
+                        if ((AussenHelligkeitLast>HellSchwelle) && (aussenHelligkeit<=HellSchwelle))
+                            {
+                            DoOnAbenddaemmerung();
+                        }
+                        AussenHelligkeitLast = aussenHelligkeit;
+                    }
+                    // Helligkeit Süd
+                    if (hdKnx.destAdr.Adr == new EIB_Adress(0, 1, 20).Adr)
+                    {
+                        helligkeitSued = hdKnx.emi.Eis5;
+                        lblHelligkeitSued.Text = helligkeitSued + "lux";
+                    }
+                    // Helligkeit Ost
+                    if (hdKnx.destAdr.Adr == new EIB_Adress(0, 1, 21).Adr)
+                    {
+                        helligkeitOst = hdKnx.emi.Eis5;
+                        lblHelligkeitOst.Text = helligkeitOst + "lux";
+                    }
+                    // Helligkeit West
+                    if (hdKnx.destAdr.Adr == new EIB_Adress(0, 1, 22).Adr)
+                    {
+                        helligkeitWest = hdKnx.emi.Eis5;
+                        lblHelligkeitWest.Text = helligkeitWest + "lux";
                     }
                 }
                 catch (Exception e)
@@ -207,6 +241,22 @@ namespace Knx
             }
         }
 
+        private void DoOnAbenddaemmerung()
+        {
+            // Licht Büro RrPt ein
+            cEMI emi = new cEMI(new EIB_Adress("1/0/56"), true);
+            KnxCon.Send(emi);
+
+            Thread.Sleep(300);
+            // dunkler
+            emi = new cEMI(new EIB_Adress("1/0/57"), (byte)9);
+            KnxCon.Send(emi);
+
+            Thread.Sleep(300);
+            // Stop
+            emi = new cEMI(new EIB_Adress("1/0/57"), (byte)0);
+            KnxCon.Send(emi);
+        }
 
         private void AddToTextbox(String txt)
         {
@@ -385,6 +435,11 @@ namespace Knx
         private void KnxNetForm_Load(object sender, EventArgs e)
         {
             this.Text = String.Format("KnxNetClient V{0}", Program.versionStr);
+        }
+
+        private void btnTest_Click(object sender, EventArgs e)
+        {
+            DoOnAbenddaemmerung();
         }
     }
 }
