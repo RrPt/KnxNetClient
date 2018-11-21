@@ -207,7 +207,7 @@ namespace Knx
                     {
                         aussenHelligkeit = hdKnx.emi.Eis5;
                         lblAussenHelligkeit.Text = aussenHelligkeit + "lux";
-                        float HellSchwelle = 100;
+                        float HellSchwelle = 700;
                         if ((AussenHelligkeitLast>HellSchwelle) && (aussenHelligkeit<=HellSchwelle))
                             {
                             DoOnAbenddaemmerung();
