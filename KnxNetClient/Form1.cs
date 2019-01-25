@@ -11,6 +11,7 @@ using EIBDef;
 using HomeData;
 using System.IO;
 using System.Threading;
+using DimmerSteuerelement;
 
 namespace Knx
 {
@@ -32,6 +33,7 @@ namespace Knx
         float helligkeitSued = -999;
         float helligkeitOst = -999;
         float helligkeitWest = -999;
+        SortedList<string, DimmerControl> dimmerList = new SortedList<string, DimmerControl>();
 
         public KnxNetForm()
         {
@@ -87,7 +89,6 @@ namespace Knx
                 this.tpSteuerung.Controls.Add(lc);
                 lc.Location = new System.Drawing.Point(20, 100 + 120 * idx++);
             }
-            this.Size = new Size(this.Size.Width, 200 + 120 * idx);
 
             // Controls für die Rollosteuerung setzen
             RolloControl rc;
@@ -102,7 +103,26 @@ namespace Knx
                 this.tpSteuerung.Controls.Add(rc);
                 rc.Location = new System.Drawing.Point(420, 100 + 120 * idx++);
             }
-            //this.Size = new Size(this.Size.Width, 200 + 120 * idx);
+
+            // Controls für die LichtHellsteuerung setzen
+            DimmerControl dse ;
+            idx = 0;
+            foreach (var light in selectedConfig.LightHellList)
+            {
+                dse = new DimmerControl();
+                dimmerList.Add(light.EibAdress_Hell, dse);
+                dse.Dimmer_Text = light.name;
+                if (light.EibAdress_Hell.EndsWith("156"))  dse.DimmerHandleBefehl += HandleDimmerControl156;
+                if (light.EibAdress_Hell.EndsWith("157"))  dse.DimmerHandleBefehl += HandleDimmerControl157;
+                this.tpSteuerung.Controls.Add(dse);
+                dse.Location = new System.Drawing.Point(720 + 120 * idx++, 100 );
+            }
+            int height = this.Size.Height;
+            if (height < 200 + 120 * idx) height = 200 + 120 * idx;
+            if (height < 550) height = 550;
+            this.Size = new Size(this.Size.Width, height);
+
+
 
             // Markisen TAb Control setzen
             rC_Markise.Titel = "Markisensteuerung";
@@ -112,6 +132,70 @@ namespace Knx
 
 
         }
+
+        public void HandleDimmerControl156(object sender, EventArgs e)
+        {
+            DimmerBefehl dimBef = (DimmerBefehl)sender;
+            EIB_Adress eibHellTele = new EIB_Adress(1,0,156);
+            HandleDimmerControl(dimBef, eibHellTele);
+        }
+
+        public void HandleDimmerControl157(object sender, EventArgs e)
+        {
+            DimmerBefehl dimBef = (DimmerBefehl)sender;
+            EIB_Adress eibHellTele = new EIB_Adress(1, 0, 157);
+            HandleDimmerControl(dimBef, eibHellTele);
+        }
+
+        public delegate void DimmerBefehlEventHandler(DimmerBefehl dimBef, EIB_Adress eibHellAdr);
+        public void HandleDimmerControl(DimmerBefehl dimBef, EIB_Adress eibHellAdr)
+        { 
+            EIB_Telegramm tele = null;
+            byte value = 0;
+
+            if (InvokeRequired)
+            {
+                BeginInvoke(new DimmerBefehlEventHandler(HandleDimmerControl), new object[] { dimBef, eibHellAdr });
+            }
+            else
+            {
+
+
+                switch (dimBef.m_cmd)
+                {
+                    //case CmdList.Ein:
+                    //    tele = new EIB_Telegramm(m_GA[Schalten], true, APCI_Typ.Send);
+                    //    break;
+                    //case CmdList.Aus:
+                    //    tele = new EIB_Telegramm(m_GA[Schalten], false, APCI_Typ.Send);
+                    //    break;
+                    //case CmdList.Heller:
+                    //    value = 9;
+                    //    tele = new EIB_Telegramm(m_GA[Dimmen], value, APCI_Typ.Send);
+                    //    break;
+                    //case CmdList.Dunkler:
+                    //    value = 1;
+                    //    tele = new EIB_Telegramm(m_GA[Dimmen], value, APCI_Typ.Send);
+                    //    break;
+                    //case CmdList.Stop:
+                    //    value = 0;
+                    //    tele = new EIB_Telegramm(m_GA[Dimmen], value, APCI_Typ.Send);
+                    //    break;
+                    case CmdList.SetWert:
+                        value = dimBef.m_value;
+                        EIB_Adress destAdr = eibHellAdr;
+
+                        tele = new EIB_Telegramm(destAdr, value, APCI_Typ.Send);
+                        tele.Eis6 = value;
+                        break;
+                    default:
+                        break;
+                }
+                if (tele != null) KnxCon.Send(new cEMI(tele));
+            }
+        }
+
+
 
         private string calculateInitialFilename()
         {
@@ -196,8 +280,17 @@ namespace Knx
                 {
                     AddToTextbox(Environment.NewLine + hdKnx.ToString());
 
-                    var x = new EIB_Adress(0, 1, 24).Adr;
-                    if (hdKnx.destAdr.Adr == x)
+                    // Licht Büro RrPt
+
+                    if (dimmerList.ContainsKey(hdKnx.destAdr.ToString()))
+                    {
+                        DimmerControl dc = dimmerList[hdKnx.destAdr.ToString()];
+                        byte hell = hdKnx.emi.Eis6;
+                        dc.Dimmer_IstWert = hell;
+                    }
+
+                    // Temperatur
+                    if (hdKnx.destAdr.Adr == new EIB_Adress(0, 1, 24).Adr)
                     {
                         temperatur = hdKnx.emi.Eis5;
                         tBTemperatur.Text = temperatur + "°C";
@@ -439,7 +532,13 @@ namespace Knx
 
         private void btnTest_Click(object sender, EventArgs e)
         {
-            DoOnAbenddaemmerung();
+            //DoOnAbenddaemmerung();
+            EIB_Telegramm tele = null;
+            EIB_Adress destAdr = new EIB_Adress(1, 0, 156);
+
+            tele = new EIB_Telegramm(destAdr, 44, APCI_Typ.Send);
+            tele.Eis6 = 44;
+            if (tele != null) KnxCon.Send(new cEMI(tele));
         }
     }
 }

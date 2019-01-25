@@ -33,6 +33,7 @@
             this.timerRollosRrPt = new System.Windows.Forms.Timer(this.components);
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tpDebug = new System.Windows.Forms.TabPage();
+            this.btnTest = new System.Windows.Forms.Button();
             this.btn_load_ESF_petz = new System.Windows.Forms.Button();
             this.btn_load_ESF_ads = new System.Windows.Forms.Button();
             this.button5 = new System.Windows.Forms.Button();
@@ -43,20 +44,19 @@
             this.cBGatewayIP = new System.Windows.Forms.ComboBox();
             this.tBResponse = new System.Windows.Forms.TextBox();
             this.tpSteuerung = new System.Windows.Forms.TabPage();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.lblHelligkeitWest = new System.Windows.Forms.Label();
+            this.lblHelligkeitOst = new System.Windows.Forms.Label();
+            this.lblHelligkeitSued = new System.Windows.Forms.Label();
             this.lblAussenHelligkeit = new System.Windows.Forms.Label();
             this.tBTemperatur = new System.Windows.Forms.TextBox();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.lblHelligkeitSued = new System.Windows.Forms.Label();
-            this.lblHelligkeitOst = new System.Windows.Forms.Label();
-            this.lblHelligkeitWest = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
             this.rC_Markise = new Knx.RolloControl();
-            this.btnTest = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tpDebug.SuspendLayout();
             this.tpSteuerung.SuspendLayout();
@@ -85,7 +85,7 @@
             this.tabControl1.Location = new System.Drawing.Point(12, 12);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(872, 527);
+            this.tabControl1.Size = new System.Drawing.Size(976, 707);
             this.tabControl1.TabIndex = 22;
             // 
             // tpDebug
@@ -103,15 +103,26 @@
             this.tpDebug.Location = new System.Drawing.Point(4, 22);
             this.tpDebug.Name = "tpDebug";
             this.tpDebug.Padding = new System.Windows.Forms.Padding(3);
-            this.tpDebug.Size = new System.Drawing.Size(864, 501);
+            this.tpDebug.Size = new System.Drawing.Size(968, 681);
             this.tpDebug.TabIndex = 0;
             this.tpDebug.Text = "Debug";
             this.tpDebug.UseVisualStyleBackColor = true;
             // 
+            // btnTest
+            // 
+            this.btnTest.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnTest.Location = new System.Drawing.Point(548, 6);
+            this.btnTest.Name = "btnTest";
+            this.btnTest.Size = new System.Drawing.Size(40, 23);
+            this.btnTest.TabIndex = 23;
+            this.btnTest.Text = "Test";
+            this.btnTest.UseVisualStyleBackColor = true;
+            this.btnTest.Click += new System.EventHandler(this.btnTest_Click);
+            // 
             // btn_load_ESF_petz
             // 
             this.btn_load_ESF_petz.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btn_load_ESF_petz.Location = new System.Drawing.Point(759, 7);
+            this.btn_load_ESF_petz.Location = new System.Drawing.Point(863, 7);
             this.btn_load_ESF_petz.Name = "btn_load_ESF_petz";
             this.btn_load_ESF_petz.Size = new System.Drawing.Size(93, 23);
             this.btn_load_ESF_petz.TabIndex = 22;
@@ -122,7 +133,7 @@
             // btn_load_ESF_ads
             // 
             this.btn_load_ESF_ads.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btn_load_ESF_ads.Location = new System.Drawing.Point(660, 8);
+            this.btn_load_ESF_ads.Location = new System.Drawing.Point(764, 8);
             this.btn_load_ESF_ads.Name = "btn_load_ESF_ads";
             this.btn_load_ESF_ads.Size = new System.Drawing.Size(93, 21);
             this.btn_load_ESF_ads.TabIndex = 21;
@@ -133,7 +144,7 @@
             // button5
             // 
             this.button5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button5.Location = new System.Drawing.Point(487, 7);
+            this.button5.Location = new System.Drawing.Point(591, 7);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(75, 23);
             this.button5.TabIndex = 20;
@@ -144,7 +155,7 @@
             // button4
             // 
             this.button4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button4.Location = new System.Drawing.Point(568, 7);
+            this.button4.Location = new System.Drawing.Point(672, 7);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(75, 23);
             this.button4.TabIndex = 19;
@@ -202,7 +213,7 @@
             this.tBResponse.Multiline = true;
             this.tBResponse.Name = "tBResponse";
             this.tBResponse.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.tBResponse.Size = new System.Drawing.Size(846, 433);
+            this.tBResponse.Size = new System.Drawing.Size(950, 613);
             this.tBResponse.TabIndex = 3;
             // 
             // tpSteuerung
@@ -221,10 +232,73 @@
             this.tpSteuerung.Location = new System.Drawing.Point(4, 22);
             this.tpSteuerung.Name = "tpSteuerung";
             this.tpSteuerung.Padding = new System.Windows.Forms.Padding(3);
-            this.tpSteuerung.Size = new System.Drawing.Size(864, 501);
+            this.tpSteuerung.Size = new System.Drawing.Size(993, 681);
             this.tpSteuerung.TabIndex = 1;
             this.tpSteuerung.Text = "Steuerung";
             this.tpSteuerung.UseVisualStyleBackColor = true;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(682, 73);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(18, 13);
+            this.label1.TabIndex = 42;
+            this.label1.Text = "W";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(682, 51);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(15, 13);
+            this.label2.TabIndex = 41;
+            this.label2.Text = "O";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(682, 33);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(14, 13);
+            this.label3.TabIndex = 40;
+            this.label3.Text = "S";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(682, 12);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(50, 13);
+            this.label4.TabIndex = 39;
+            this.label4.Text = "Helligkeit";
+            // 
+            // lblHelligkeitWest
+            // 
+            this.lblHelligkeitWest.AutoSize = true;
+            this.lblHelligkeitWest.Location = new System.Drawing.Point(742, 73);
+            this.lblHelligkeitWest.Name = "lblHelligkeitWest";
+            this.lblHelligkeitWest.Size = new System.Drawing.Size(18, 13);
+            this.lblHelligkeitWest.TabIndex = 38;
+            this.lblHelligkeitWest.Text = "W";
+            // 
+            // lblHelligkeitOst
+            // 
+            this.lblHelligkeitOst.AutoSize = true;
+            this.lblHelligkeitOst.Location = new System.Drawing.Point(742, 51);
+            this.lblHelligkeitOst.Name = "lblHelligkeitOst";
+            this.lblHelligkeitOst.Size = new System.Drawing.Size(15, 13);
+            this.lblHelligkeitOst.TabIndex = 37;
+            this.lblHelligkeitOst.Text = "O";
+            // 
+            // lblHelligkeitSued
+            // 
+            this.lblHelligkeitSued.AutoSize = true;
+            this.lblHelligkeitSued.Location = new System.Drawing.Point(742, 33);
+            this.lblHelligkeitSued.Name = "lblHelligkeitSued";
+            this.lblHelligkeitSued.Size = new System.Drawing.Size(14, 13);
+            this.lblHelligkeitSued.TabIndex = 36;
+            this.lblHelligkeitSued.Text = "S";
             // 
             // lblAussenHelligkeit
             // 
@@ -272,73 +346,10 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(864, 501);
+            this.tabPage1.Size = new System.Drawing.Size(993, 681);
             this.tabPage1.TabIndex = 2;
             this.tabPage1.Text = "Markise";
             this.tabPage1.UseVisualStyleBackColor = true;
-            // 
-            // lblHelligkeitSued
-            // 
-            this.lblHelligkeitSued.AutoSize = true;
-            this.lblHelligkeitSued.Location = new System.Drawing.Point(742, 33);
-            this.lblHelligkeitSued.Name = "lblHelligkeitSued";
-            this.lblHelligkeitSued.Size = new System.Drawing.Size(14, 13);
-            this.lblHelligkeitSued.TabIndex = 36;
-            this.lblHelligkeitSued.Text = "S";
-            // 
-            // lblHelligkeitOst
-            // 
-            this.lblHelligkeitOst.AutoSize = true;
-            this.lblHelligkeitOst.Location = new System.Drawing.Point(742, 51);
-            this.lblHelligkeitOst.Name = "lblHelligkeitOst";
-            this.lblHelligkeitOst.Size = new System.Drawing.Size(15, 13);
-            this.lblHelligkeitOst.TabIndex = 37;
-            this.lblHelligkeitOst.Text = "O";
-            // 
-            // lblHelligkeitWest
-            // 
-            this.lblHelligkeitWest.AutoSize = true;
-            this.lblHelligkeitWest.Location = new System.Drawing.Point(742, 73);
-            this.lblHelligkeitWest.Name = "lblHelligkeitWest";
-            this.lblHelligkeitWest.Size = new System.Drawing.Size(18, 13);
-            this.lblHelligkeitWest.TabIndex = 38;
-            this.lblHelligkeitWest.Text = "W";
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(682, 73);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(18, 13);
-            this.label1.TabIndex = 42;
-            this.label1.Text = "W";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(682, 51);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(15, 13);
-            this.label2.TabIndex = 41;
-            this.label2.Text = "O";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(682, 33);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(14, 13);
-            this.label3.TabIndex = 40;
-            this.label3.Text = "S";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(682, 12);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(50, 13);
-            this.label4.TabIndex = 39;
-            this.label4.Text = "Helligkeit";
             // 
             // rC_Markise
             // 
@@ -348,26 +359,15 @@
             this.rC_Markise.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.rC_Markise.Location = new System.Drawing.Point(6, 26);
             this.rC_Markise.Name = "rC_Markise";
-            this.rC_Markise.Size = new System.Drawing.Size(832, 469);
+            this.rC_Markise.Size = new System.Drawing.Size(961, 649);
             this.rC_Markise.TabIndex = 0;
             this.rC_Markise.Titel = "Licht";
-            // 
-            // btnTest
-            // 
-            this.btnTest.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnTest.Location = new System.Drawing.Point(444, 6);
-            this.btnTest.Name = "btnTest";
-            this.btnTest.Size = new System.Drawing.Size(40, 23);
-            this.btnTest.TabIndex = 23;
-            this.btnTest.Text = "Test";
-            this.btnTest.UseVisualStyleBackColor = true;
-            this.btnTest.Click += new System.EventHandler(this.btnTest_Click);
             // 
             // KnxNetForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(896, 551);
+            this.ClientSize = new System.Drawing.Size(1000, 731);
             this.Controls.Add(this.tabControl1);
             this.Name = "KnxNetForm";
             this.Text = "KnxNetClient      V17.1.26";

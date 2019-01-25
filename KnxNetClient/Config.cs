@@ -100,6 +100,9 @@ namespace Knx
 
         private ConfigListConfigRollo[] rolloListField;
 
+        private ConfigListConfigLightHell[] lightHellListField;
+
+
         /// <remarks/>
         public string name
         {
@@ -126,6 +129,21 @@ namespace Knx
                 this.lightListField = value;
             }
         }
+
+        /// <remarks/>
+        [System.Xml.Serialization.XmlArrayItemAttribute("Light", IsNullable = false)]
+        public ConfigListConfigLightHell[] LightHellList
+        {
+            get
+            {
+                return this.lightHellListField;
+            }
+            set
+            {
+                this.lightHellListField = value;
+            }
+        }
+
 
         /// <remarks/>
         [System.Xml.Serialization.XmlArrayItemAttribute("Rollo", IsNullable = false)]
@@ -192,6 +210,44 @@ namespace Knx
             }
         }
     }
+
+    /// <remarks/>
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
+    public partial class ConfigListConfigLightHell
+    {
+
+        private string nameField;
+
+        private string eibAdress_HellField;
+
+        /// <remarks/>
+        public string name
+        {
+            get
+            {
+                return this.nameField;
+            }
+            set
+            {
+                this.nameField = value;
+            }
+        }
+
+        /// <remarks/>
+        public string EibAdress_Hell
+        {
+            get
+            {
+                return this.eibAdress_HellField;
+            }
+            set
+            {
+                this.eibAdress_HellField = value;
+            }
+        }
+
+    }
+
 
     /// <remarks/>
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
