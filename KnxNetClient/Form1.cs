@@ -72,6 +72,7 @@ namespace Knx
             timerRollosRrPt.Interval = msTo8;
             timerRollosRrPt.Start();
             tBTemperatur.Text = temperatur + "°C";
+            timerMain.Start();
         }
 
         private void SetControls()
@@ -302,8 +303,8 @@ namespace Knx
                         lblAussenHelligkeit.Text = aussenHelligkeit + "lux";
                         float HellSchwelle = 700;
                         if ((AussenHelligkeitLast>HellSchwelle) && (aussenHelligkeit<=HellSchwelle))
-                            {
-                            DoOnAbenddaemmerung();
+                            {   // spätestens um 19 Uhr
+                            if (now.Hour<19)  SetLichtRrPt(true);
                         }
                         AussenHelligkeitLast = aussenHelligkeit;
                     }
@@ -334,21 +335,21 @@ namespace Knx
             }
         }
 
-        private void DoOnAbenddaemmerung()
+        private void SetLichtRrPt(bool zustand)
         {
             // Licht Büro RrPt ein
-            cEMI emi = new cEMI(new EIB_Adress("1/0/56"), true);
+            cEMI emi = new cEMI(new EIB_Adress("1/0/56"), zustand);
             KnxCon.Send(emi);
 
-            Thread.Sleep(300);
-            // dunkler
-            emi = new cEMI(new EIB_Adress("1/0/57"), (byte)9);
-            KnxCon.Send(emi);
+            //Thread.Sleep(300);
+            //// dunkler
+            //emi = new cEMI(new EIB_Adress("1/0/57"), (byte)9);
+            //KnxCon.Send(emi);
 
-            Thread.Sleep(300);
-            // Stop
-            emi = new cEMI(new EIB_Adress("1/0/57"), (byte)0);
-            KnxCon.Send(emi);
+            //Thread.Sleep(300);
+            //// Stop
+            //emi = new cEMI(new EIB_Adress("1/0/57"), (byte)0);
+            //KnxCon.Send(emi);
         }
 
         private void AddToTextbox(String txt)
@@ -539,6 +540,28 @@ namespace Knx
             tele = new EIB_Telegramm(destAdr, 44, APCI_Typ.Send);
             tele.Eis6 = 44;
             if (tele != null) KnxCon.Send(new cEMI(tele));
+        }
+
+        DateTime lastTick = DateTime.MinValue;
+        DateTime now = DateTime.MinValue;
+        private void timerMain_Tick(object sender, EventArgs e)
+        {
+            now = DateTime.Now;
+
+            if (IsTime(19,05))
+            {   // 19 Uhr licht aus
+                SetLichtRrPt(false);
+            }
+            Console.WriteLine("{0}  {1}",now,lastTick);
+            lastTick = now;
+        }
+
+        private bool IsTime(int h, int min)
+        {
+            if (h != now.Hour) return false;            // falsche Stunden
+            if (min != now.Minute) return false;        // falsche Minute
+            if (min == lastTick.Minute) return false;   // richtige Minute aber Tick war schon
+            return true;
         }
     }
 }

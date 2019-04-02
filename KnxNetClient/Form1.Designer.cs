@@ -57,6 +57,7 @@
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.rC_Markise = new Knx.RolloControl();
+            this.timerMain = new System.Windows.Forms.Timer(this.components);
             this.tabControl1.SuspendLayout();
             this.tpDebug.SuspendLayout();
             this.tpSteuerung.SuspendLayout();
@@ -232,7 +233,7 @@
             this.tpSteuerung.Location = new System.Drawing.Point(4, 22);
             this.tpSteuerung.Name = "tpSteuerung";
             this.tpSteuerung.Padding = new System.Windows.Forms.Padding(3);
-            this.tpSteuerung.Size = new System.Drawing.Size(993, 681);
+            this.tpSteuerung.Size = new System.Drawing.Size(968, 681);
             this.tpSteuerung.TabIndex = 1;
             this.tpSteuerung.Text = "Steuerung";
             this.tpSteuerung.UseVisualStyleBackColor = true;
@@ -346,7 +347,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(993, 681);
+            this.tabPage1.Size = new System.Drawing.Size(968, 681);
             this.tabPage1.TabIndex = 2;
             this.tabPage1.Text = "Markise";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -362,6 +363,11 @@
             this.rC_Markise.Size = new System.Drawing.Size(961, 649);
             this.rC_Markise.TabIndex = 0;
             this.rC_Markise.Titel = "Licht";
+            // 
+            // timerMain
+            // 
+            this.timerMain.Interval = 1000;
+            this.timerMain.Tick += new System.EventHandler(this.timerMain_Tick);
             // 
             // KnxNetForm
             // 
@@ -415,6 +421,7 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Button btnTest;
+        private System.Windows.Forms.Timer timerMain;
     }
 }
 
