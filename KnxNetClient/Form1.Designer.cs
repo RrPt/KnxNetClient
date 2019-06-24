@@ -58,6 +58,7 @@
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.rC_Markise = new Knx.RolloControl();
             this.timerMain = new System.Windows.Forms.Timer(this.components);
+            this.tbWind = new System.Windows.Forms.TextBox();
             this.tabControl1.SuspendLayout();
             this.tpDebug.SuspendLayout();
             this.tpSteuerung.SuspendLayout();
@@ -219,6 +220,7 @@
             // 
             // tpSteuerung
             // 
+            this.tpSteuerung.Controls.Add(this.tbWind);
             this.tpSteuerung.Controls.Add(this.label1);
             this.tpSteuerung.Controls.Add(this.label2);
             this.tpSteuerung.Controls.Add(this.label3);
@@ -313,7 +315,7 @@
             // tBTemperatur
             // 
             this.tBTemperatur.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tBTemperatur.Location = new System.Drawing.Point(301, 33);
+            this.tBTemperatur.Location = new System.Drawing.Point(247, 26);
             this.tBTemperatur.Name = "tBTemperatur";
             this.tBTemperatur.Size = new System.Drawing.Size(100, 38);
             this.tBTemperatur.TabIndex = 34;
@@ -369,6 +371,14 @@
             this.timerMain.Interval = 1000;
             this.timerMain.Tick += new System.EventHandler(this.timerMain_Tick);
             // 
+            // tbWind
+            // 
+            this.tbWind.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbWind.Location = new System.Drawing.Point(371, 26);
+            this.tbWind.Name = "tbWind";
+            this.tbWind.Size = new System.Drawing.Size(100, 38);
+            this.tbWind.TabIndex = 43;
+            // 
             // KnxNetForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -422,6 +432,7 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Button btnTest;
         private System.Windows.Forms.Timer timerMain;
+        private System.Windows.Forms.TextBox tbWind;
     }
 }
 

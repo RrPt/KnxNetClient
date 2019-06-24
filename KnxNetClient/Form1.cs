@@ -267,7 +267,12 @@ namespace Knx
             }
         }
 
-
+        private void toFile(float wert, string fn)
+        {
+            String line = String.Format("{0} {1}\n", DateTime.Now.ToString(), wert).Replace(",", ".");
+            Console.WriteLine(line);
+            File.AppendAllText(fn, line);
+        }
 
         private void DataChanged(HDKnx hdKnx)
         {
@@ -295,6 +300,15 @@ namespace Knx
                     {
                         temperatur = hdKnx.emi.Eis5;
                         tBTemperatur.Text = temperatur + "°C";
+                        toFile(temperatur, "TemperaturData.txt");
+                    }
+                    // Wind
+                    if (hdKnx.destAdr.Adr == new EIB_Adress(0, 1, 23).Adr)
+                    {
+                        float wind = hdKnx.emi.Eis5;
+                        tbWind.Text = wind + "m/s";
+                        toFile(wind, "WindData.txt");
+
                     }
                     // Aussenhelligkeit 
                     if (hdKnx.destAdr.Adr == new EIB_Adress(0, 1, 10).Adr)
@@ -313,18 +327,21 @@ namespace Knx
                     {
                         helligkeitSued = hdKnx.emi.Eis5;
                         lblHelligkeitSued.Text = helligkeitSued + "lux";
+                        toFile(helligkeitSued, "HellSuedData.txt");
                     }
                     // Helligkeit Ost
                     if (hdKnx.destAdr.Adr == new EIB_Adress(0, 1, 21).Adr)
                     {
                         helligkeitOst = hdKnx.emi.Eis5;
                         lblHelligkeitOst.Text = helligkeitOst + "lux";
+                        toFile(helligkeitOst, "HellOstData.txt");
                     }
                     // Helligkeit West
                     if (hdKnx.destAdr.Adr == new EIB_Adress(0, 1, 22).Adr)
                     {
                         helligkeitWest = hdKnx.emi.Eis5;
                         lblHelligkeitWest.Text = helligkeitWest + "lux";
+                        toFile(helligkeitWest, "HellWestData.txt");
                     }
                 }
                 catch (Exception e)
@@ -533,13 +550,20 @@ namespace Knx
 
         private void btnTest_Click(object sender, EventArgs e)
         {
-            //DoOnAbenddaemmerung();
             EIB_Telegramm tele = null;
-            EIB_Adress destAdr = new EIB_Adress(1, 0, 156);
 
-            tele = new EIB_Telegramm(destAdr, 44, APCI_Typ.Send);
-            tele.Eis6 = 44;
+            tele = new EIB_Telegramm(new EIB_Adress(0, 1, 0), false, APCI_Typ.Send);
             if (tele != null) KnxCon.Send(new cEMI(tele));
+
+            tele = new EIB_Telegramm(new EIB_Adress(0, 1, 200), true, APCI_Typ.Send);
+            if (sender != null) KnxCon.Send(new cEMI(tele));
+
+            tele = new EIB_Telegramm(new EIB_Adress(0, 1, 6), false, APCI_Typ.Send);
+            if (tele != null) KnxCon.Send(new cEMI(tele));
+
+            tele = new EIB_Telegramm(new EIB_Adress(6, 1, 2), true, APCI_Typ.Send);
+            if (sender != null) KnxCon.Send(new cEMI(tele));
+
         }
 
         DateTime lastTick = DateTime.MinValue;
@@ -552,7 +576,13 @@ namespace Knx
             {   // 19 Uhr licht aus
                 SetLichtRrPt(false);
             }
-            Console.WriteLine("{0}  {1}",now,lastTick);
+            if (now.Second == 0)
+            {
+                btnTest_Click(null, null);
+                Console.WriteLine("RolloWorkaround: {0}  {1}", now, lastTick);
+            }
+
+            //Console.WriteLine("{0}  {1}",now,lastTick);
             lastTick = now;
         }
 
