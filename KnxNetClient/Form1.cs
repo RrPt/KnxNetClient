@@ -269,10 +269,18 @@ namespace Knx
 
         private void toFile(float wert, string fn)
         {
-            String line = String.Format("{0} {1}\n", DateTime.Now.ToString(), wert).Replace(",", ".");
+            String line = String.Format("{0} ; {1}\n", DateTime.Now.ToString(), wert.ToString().Replace(".", ","));
             Console.WriteLine(line);
             File.AppendAllText(fn, line);
         }
+
+        private void toFile(string wert, string fn)
+        {
+            String line = String.Format("{0} ; {1}\n", DateTime.Now.ToString(), wert);
+            Console.WriteLine(line);
+            File.AppendAllText(fn, line);
+        }
+
 
         private void DataChanged(HDKnx hdKnx)
         {
@@ -342,6 +350,12 @@ namespace Knx
                         helligkeitWest = hdKnx.emi.Eis5;
                         lblHelligkeitWest.Text = helligkeitWest + "lux";
                         toFile(helligkeitWest, "HellWestData.txt");
+                    }
+                    // Debugmeldungen
+                    if (hdKnx.destAdr.Hauptgruppe == 0 && hdKnx.destAdr.Mittelgruppe == 7)
+                    {
+                        string msg = String.Format("GA={0} wert={1}", hdKnx.destAdr.ToString(), hdKnx.emi.Eis1);
+                        toFile(msg, "Debug.txt");
                     }
                 }
                 catch (Exception e)
