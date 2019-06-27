@@ -44,6 +44,7 @@
             this.cBGatewayIP = new System.Windows.Forms.ComboBox();
             this.tBResponse = new System.Windows.Forms.TextBox();
             this.tpSteuerung = new System.Windows.Forms.TabPage();
+            this.tbWind = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
@@ -58,7 +59,7 @@
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.rC_Markise = new Knx.RolloControl();
             this.timerMain = new System.Windows.Forms.Timer(this.components);
-            this.tbWind = new System.Windows.Forms.TextBox();
+            this.cBSendZyklNoWind = new System.Windows.Forms.CheckBox();
             this.tabControl1.SuspendLayout();
             this.tpDebug.SuspendLayout();
             this.tpSteuerung.SuspendLayout();
@@ -92,6 +93,7 @@
             // 
             // tpDebug
             // 
+            this.tpDebug.Controls.Add(this.cBSendZyklNoWind);
             this.tpDebug.Controls.Add(this.btnTest);
             this.tpDebug.Controls.Add(this.btn_load_ESF_petz);
             this.tpDebug.Controls.Add(this.btn_load_ESF_ads);
@@ -113,7 +115,7 @@
             // btnTest
             // 
             this.btnTest.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnTest.Location = new System.Drawing.Point(548, 6);
+            this.btnTest.Location = new System.Drawing.Point(580, 7);
             this.btnTest.Name = "btnTest";
             this.btnTest.Size = new System.Drawing.Size(40, 23);
             this.btnTest.TabIndex = 23;
@@ -124,9 +126,9 @@
             // btn_load_ESF_petz
             // 
             this.btn_load_ESF_petz.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btn_load_ESF_petz.Location = new System.Drawing.Point(863, 7);
+            this.btn_load_ESF_petz.Location = new System.Drawing.Point(872, 7);
             this.btn_load_ESF_petz.Name = "btn_load_ESF_petz";
-            this.btn_load_ESF_petz.Size = new System.Drawing.Size(93, 23);
+            this.btn_load_ESF_petz.Size = new System.Drawing.Size(84, 23);
             this.btn_load_ESF_petz.TabIndex = 22;
             this.btn_load_ESF_petz.Text = "load ESF Petz";
             this.btn_load_ESF_petz.UseVisualStyleBackColor = true;
@@ -135,9 +137,9 @@
             // btn_load_ESF_ads
             // 
             this.btn_load_ESF_ads.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btn_load_ESF_ads.Location = new System.Drawing.Point(764, 8);
+            this.btn_load_ESF_ads.Location = new System.Drawing.Point(782, 8);
             this.btn_load_ESF_ads.Name = "btn_load_ESF_ads";
-            this.btn_load_ESF_ads.Size = new System.Drawing.Size(93, 21);
+            this.btn_load_ESF_ads.Size = new System.Drawing.Size(85, 21);
             this.btn_load_ESF_ads.TabIndex = 21;
             this.btn_load_ESF_ads.Text = "load ESF ads";
             this.btn_load_ESF_ads.UseVisualStyleBackColor = true;
@@ -146,7 +148,7 @@
             // button5
             // 
             this.button5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button5.Location = new System.Drawing.Point(591, 7);
+            this.button5.Location = new System.Drawing.Point(623, 7);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(75, 23);
             this.button5.TabIndex = 20;
@@ -157,7 +159,7 @@
             // button4
             // 
             this.button4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button4.Location = new System.Drawing.Point(672, 7);
+            this.button4.Location = new System.Drawing.Point(704, 7);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(75, 23);
             this.button4.TabIndex = 19;
@@ -240,6 +242,14 @@
             this.tpSteuerung.Text = "Steuerung";
             this.tpSteuerung.UseVisualStyleBackColor = true;
             // 
+            // tbWind
+            // 
+            this.tbWind.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbWind.Location = new System.Drawing.Point(371, 26);
+            this.tbWind.Name = "tbWind";
+            this.tbWind.Size = new System.Drawing.Size(118, 38);
+            this.tbWind.TabIndex = 43;
+            // 
             // label1
             // 
             this.label1.AutoSize = true;
@@ -317,7 +327,7 @@
             this.tBTemperatur.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tBTemperatur.Location = new System.Drawing.Point(247, 26);
             this.tBTemperatur.Name = "tBTemperatur";
-            this.tBTemperatur.Size = new System.Drawing.Size(100, 38);
+            this.tBTemperatur.Size = new System.Drawing.Size(118, 38);
             this.tBTemperatur.TabIndex = 34;
             // 
             // pictureBox2
@@ -371,13 +381,15 @@
             this.timerMain.Interval = 1000;
             this.timerMain.Tick += new System.EventHandler(this.timerMain_Tick);
             // 
-            // tbWind
+            // cBSendZyklNoWind
             // 
-            this.tbWind.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbWind.Location = new System.Drawing.Point(371, 26);
-            this.tbWind.Name = "tbWind";
-            this.tbWind.Size = new System.Drawing.Size(100, 38);
-            this.tbWind.TabIndex = 43;
+            this.cBSendZyklNoWind.AutoSize = true;
+            this.cBSendZyklNoWind.Location = new System.Drawing.Point(439, 10);
+            this.cBSendZyklNoWind.Name = "cBSendZyklNoWind";
+            this.cBSendZyklNoWind.Size = new System.Drawing.Size(133, 17);
+            this.cBSendZyklNoWind.TabIndex = 24;
+            this.cBSendZyklNoWind.Text = "zykl.kein Wind senden";
+            this.cBSendZyklNoWind.UseVisualStyleBackColor = true;
             // 
             // KnxNetForm
             // 
@@ -433,6 +445,7 @@
         private System.Windows.Forms.Button btnTest;
         private System.Windows.Forms.Timer timerMain;
         private System.Windows.Forms.TextBox tbWind;
+        private System.Windows.Forms.CheckBox cBSendZyklNoWind;
     }
 }
 

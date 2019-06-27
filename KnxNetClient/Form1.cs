@@ -590,10 +590,12 @@ namespace Knx
             {   // 19 Uhr licht aus
                 SetLichtRrPt(false);
             }
-            if (now.Second == 0)
+            if ((now.Second == 0) && (cBSendZyklNoWind.Checked))
             {
+                AddToTextbox(Environment.NewLine + "Telegramm kein Wind senden:");
+
                 btnTest_Click(null, null);
-                Console.WriteLine("RolloWorkaround: {0}  {1}", now, lastTick);
+                Console.WriteLine("Kein Wind gesendet: {0}  {1}", now, lastTick);
             }
 
             //Console.WriteLine("{0}  {1}",now,lastTick);
