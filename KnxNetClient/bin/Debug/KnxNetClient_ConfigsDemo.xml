@@ -1,0 +1,73 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ConfigList>
+	<defaultConfig>privat</defaultConfig>
+  <Config>
+	<name>Büro RrPt</name>
+	<LightList>
+		<Light>
+			<name>Licht RrPt</name>
+			<EibAdress_IO>1/0/56</EibAdress_IO>
+			<EibAdress_Dimm>1/0/57</EibAdress_Dimm>
+		</Light>
+		<Light>
+			<name>Licht IT 1</name>
+			<EibAdress_IO>1/2/17</EibAdress_IO>
+			<EibAdress_Dimm>1/2/18</EibAdress_Dimm>
+		</Light>
+		<Light>
+			<name>Licht IT 2</name>
+			<EibAdress_IO>1/2/19</EibAdress_IO>
+			<EibAdress_Dimm>1/2/20</EibAdress_Dimm>
+		</Light>
+	</LightList>
+	<RolloList>
+		<Rollo>
+			<name>Rolladen RrPt</name>
+			<EibAdress_AufAb>1/1/0</EibAdress_AufAb>
+			<EibAdress_Lamelle>1/1/1</EibAdress_Lamelle>
+		</Rollo>
+		<Rollo>
+			<name>Rolladen IT-Büro</name>
+			<EibAdress_AufAb>1/3/24</EibAdress_AufAb>
+			<EibAdress_Lamelle>1/3/25</EibAdress_Lamelle>
+		</Rollo>
+		<Rollo>
+			<name>Sheddach</name>
+			<EibAdress_AufAb>6/1/2</EibAdress_AufAb>
+			<EibAdress_Lamelle>6/1/3</EibAdress_Lamelle>
+		</Rollo>
+	</RolloList>
+  </Config>
+  <Config>
+	<name>privat</name>
+	<LightList>
+		<Light>
+			<name>Licht Wz vorne</name>
+			<EibAdress_IO>2/1/32</EibAdress_IO>
+			<EibAdress_Dimm>2/1/34</EibAdress_Dimm>
+		</Light>
+		<Light>
+			<name>Licht Wz hinten</name>
+			<EibAdress_IO>2/1/31</EibAdress_IO>
+			<EibAdress_Dimm>2/1/33</EibAdress_Dimm>
+		</Light>
+	</LightList>
+	<RolloList>
+		<Rollo>
+			<name>Kueche</name>
+			<EibAdress_AufAb>1/1/3</EibAdress_AufAb>
+			<EibAdress_Lamelle>1/1/13</EibAdress_Lamelle>
+		</Rollo>		<Rollo>
+			<name>Arbeitszimmer</name>
+			<EibAdress_AufAb>1/0/1</EibAdress_AufAb>
+			<EibAdress_Lamelle>1/0/11</EibAdress_Lamelle>
+		</Rollo>
+		<Rollo>
+			<name>Markise</name>
+			<EibAdress_AufAb>1/1/4</EibAdress_AufAb>
+			<EibAdress_Lamelle>1/1/14</EibAdress_Lamelle>
+		</Rollo>
+	</RolloList>
+  </Config>
+
+</ConfigList>

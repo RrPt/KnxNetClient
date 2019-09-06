@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<EibItemList xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <EibItem>
+    <name>Window_livingRoom</name>
+    <EibAdress>0/0/1</EibAdress>
+    <EisName>Knx.EIS1</EisName>
+    <Typ>?</Typ>
+    <unit>no</unit>
+  </EibItem>
+  <EibItem>
+    <name>P_Herd3</name>
+    <EibAdress>5/0/3</EibAdress>
+    <EisName>Knx.EIS5</EisName>
+    <Typ>Power</Typ>
+    <unit>W</unit>
+  </EibItem>
+  <EibItem>
+    <name>Time</name>
+    <EibAdress>4/0/1</EibAdress>
+    <EisName>Knx.EIS3</EisName>
+    <Typ>Time</Typ>
+    <unit>h</unit>
+  </EibItem>
+</EibItemList>
