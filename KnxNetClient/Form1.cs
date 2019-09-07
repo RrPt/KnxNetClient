@@ -80,44 +80,54 @@ namespace Knx
             // Controls für die Lichtsteuerung setzen
             LichtControl lc;
             int idx = 0;
-            foreach (var light in selectedConfig.LightList)
+            if (selectedConfig.LightList!=null)
             {
-                lc = new LichtControl();
-                lc.Titel = light.name;
-                lc.EibAdress_IO = light.EibAdress_IO;
-                lc.EibAdress_Dimm = light.EibAdress_Dimm;
-                lc.SetKnxSendFunction(KnxCon.Send);
-                this.tpSteuerung.Controls.Add(lc);
-                lc.Location = new System.Drawing.Point(20, 100 + 120 * idx++);
+                foreach (var light in selectedConfig.LightList)
+                {
+                    lc = new LichtControl();
+                    lc.Titel = light.name;
+                    lc.EibAdress_IO = light.EibAdress_IO;
+                    lc.EibAdress_Dimm = light.EibAdress_Dimm;
+                    lc.SetKnxSendFunction(KnxCon.Send);
+                    this.tpSteuerung.Controls.Add(lc);
+                    lc.Location = new System.Drawing.Point(20, 100 + 120 * idx++);
+                } 
             }
 
             // Controls für die Rollosteuerung setzen
             RolloControl rc;
             idx = 0;
-            foreach (var light in selectedConfig.RolloList)
+            if (selectedConfig.RolloList != null)
             {
-                rc = new RolloControl();
-                rc.Titel = light.name;
-                rc.EibAdress_AufAb = light.EibAdress_AufAb;
-                rc.EibAdress_Lamelle = light.EibAdress_Lamelle;
-                rc.SetKnxSendFunction(KnxCon.Send);
-                this.tpSteuerung.Controls.Add(rc);
-                rc.Location = new System.Drawing.Point(420, 100 + 120 * idx++);
+                foreach (var light in selectedConfig.RolloList)
+                {
+                    rc = new RolloControl();
+                    rc.Titel = light.name;
+                    rc.EibAdress_AufAb = light.EibAdress_AufAb;
+                    rc.EibAdress_Lamelle = light.EibAdress_Lamelle;
+                    rc.SetKnxSendFunction(KnxCon.Send);
+                    this.tpSteuerung.Controls.Add(rc);
+                    rc.Location = new System.Drawing.Point(420, 100 + 120 * idx++);
+                }
             }
 
             // Controls für die LichtHellsteuerung setzen
             DimmerControl dse ;
             idx = 0;
-            foreach (var light in selectedConfig.LightHellList)
+            if (selectedConfig.LightHellList != null)
             {
-                dse = new DimmerControl();
-                dimmerList.Add(light.EibAdress_Hell, dse);
-                dse.Dimmer_Text = light.name;
-                if (light.EibAdress_Hell.EndsWith("156"))  dse.DimmerHandleBefehl += HandleDimmerControl156;
-                if (light.EibAdress_Hell.EndsWith("157"))  dse.DimmerHandleBefehl += HandleDimmerControl157;
-                this.tpSteuerung.Controls.Add(dse);
-                dse.Location = new System.Drawing.Point(720 + 120 * idx++, 100 );
+                foreach (var light in selectedConfig?.LightHellList)
+                {
+                    dse = new DimmerControl();
+                    dimmerList.Add(light.EibAdress_Hell, dse);
+                    dse.Dimmer_Text = light.name;
+                    if (light.EibAdress_Hell.EndsWith("156")) dse.DimmerHandleBefehl += HandleDimmerControl156;
+                    if (light.EibAdress_Hell.EndsWith("157")) dse.DimmerHandleBefehl += HandleDimmerControl157;
+                    this.tpSteuerung.Controls.Add(dse);
+                    dse.Location = new System.Drawing.Point(720 + 120 * idx++, 100);
+                }
             }
+
             int height = this.Size.Height;
             if (height < 200 + 120 * idx) height = 200 + 120 * idx;
             if (height < 550) height = 550;
