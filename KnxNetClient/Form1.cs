@@ -414,7 +414,7 @@ namespace Knx
 
         private void Open_Click(object sender, EventArgs e)
         {
-            String GatewayIp = (String)cBGatewayIP.SelectedItem;
+            String GatewayIp = (String)cBGatewayIP.Text;
             bool ok = KnxCon.Open(GatewayIp);
             if (!ok) AddToTextbox(Environment.NewLine + "Konnte keine Verbindung zum Gateway " + GatewayIp + " herstellen");
             else AddToTextbox(Environment.NewLine + "Connected mit Gateway " + GatewayIp + "  ChannelId=" + KnxCon.channelId);
@@ -564,7 +564,7 @@ namespace Knx
 
         private void KnxNetForm_Shown(object sender, EventArgs e)
         {
-            Open_Click(null, null);
+            //Open_Click(null, null);
         }
 
         private void KnxNetForm_Load(object sender, EventArgs e)
