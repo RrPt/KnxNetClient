@@ -325,8 +325,8 @@ namespace Knx
                         lblAussenHelligkeit.Text = aussenHelligkeit + "lux";
                         float HellSchwelle = 700;
                         if ((AussenHelligkeitLast>HellSchwelle) && (aussenHelligkeit<=HellSchwelle))
-                            {   // spätestens um 19 Uhr
-                            if (now.Hour<19)  SetLichtRrPt(true);
+                            {   // nur vor um 19 Uhr
+                            if (now.Hour<17)  SetLichtRrPt(true);
                         }
                         AussenHelligkeitLast = aussenHelligkeit;
                     }
@@ -586,8 +586,8 @@ namespace Knx
         {
             now = DateTime.Now;
 
-            if (IsTime(19,05))
-            {   // 19 Uhr licht aus
+            if (IsTime(18,00))
+            {   // 18 Uhr licht aus
                 SetLichtRrPt(false);
             }
             if ((now.Second == 0) && (cBSendZyklNoWind.Checked))
