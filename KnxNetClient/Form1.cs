@@ -545,7 +545,7 @@ namespace Knx
             rolloThread = new Thread(new ThreadStart(rolloKorrektur));
             rolloThread.Start();
 
-            sheddachRunter();
+            //sheddachRunter();
 
             AddToTextbox(Environment.NewLine + "Korrektur Rollo RrPt");
 
@@ -564,7 +564,7 @@ namespace Knx
 
         private void KnxNetForm_Shown(object sender, EventArgs e)
         {
-            //Open_Click(null, null);
+            Open_Click(null, null);
         }
 
         private void KnxNetForm_Load(object sender, EventArgs e)
